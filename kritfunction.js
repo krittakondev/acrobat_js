@@ -42,8 +42,8 @@ function dialogColor(){
 				elements: [{
 					alignment: "align_right",
 					type: "ok_cancel",
-					ok_name: "ตกลง",
-					cancel_name: "ยกเลิก"
+					ok_name: "เธ•เธเธฅเธ",
+					cancel_name: "เธขเธเน€เธฅเธดเธ"
 				}]
 			}]
 		}
@@ -85,14 +85,14 @@ function removePage(func){
 			listPageSe.push(page);
 		}
 		listPageSe = listPageSe.sort();
-		var check = app.alert("จะลบทุกหน้า "+listPageSe+" จริงหรือไม่?", 2, 2, "ยืนยัน");
+		var check = app.alert("เธเธฐเธฅเธเธ—เธธเธเธซเธเนเธฒ "+listPageSe+" เธเธฃเธดเธเธซเธฃเธทเธญเนเธกเน?", 2, 2, "เธขเธทเธเธขเธฑเธ");
 		if (check === 4){
 			for (i=this.numPages;i>0;i--){
 				if(listPageSe.indexOf(i) != -1){
 					this.deletePages(i-1);
 				}
 			}
-			app.alert("ลบเรียบร้อยแล้ว", 3);
+			app.alert("เธฅเธเน€เธฃเธตเธขเธเธฃเนเธญเธขเนเธฅเนเธง", 3);
 			app.execMenuItem("SaveAs")
 		}
 	}else if(func == "rmBookmarkNotSelect"){
@@ -105,14 +105,14 @@ function removePage(func){
 			listPageSe.push(page);
 		}
 		listPageSe = listPageSe.sort();
-		var check = app.alert("จะลบทุกหน้ายกเว้นหน้า "+listPageSe+" จริงหรือไม่?", 2, 2, "ยืนยัน");
+		var check = app.alert("เธเธฐเธฅเธเธ—เธธเธเธซเธเนเธฒเธขเธเน€เธงเนเธเธซเธเนเธฒ "+listPageSe+" เธเธฃเธดเธเธซเธฃเธทเธญเนเธกเน?", 2, 2, "เธขเธทเธเธขเธฑเธ");
 		if (check === 4){
 			for (i=this.numPages;i>0;i--){
 				if(listPageSe.indexOf(i) == -1){
 					this.deletePages(i-1);
 				}
 			}
-			app.alert("ลบเรียบร้อยแล้ว", 3);
+			app.alert("เธฅเธเน€เธฃเธตเธขเธเธฃเนเธญเธขเนเธฅเนเธง", 3);
 			app.execMenuItem("SaveAs")
 		}
 		
@@ -123,11 +123,11 @@ function removePage(func){
 function loop_ToBlack(){
 	listCur = countListNum(listCurPage);
 	listPageStr = listCur.join(",");
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
+	var pages = app.response({cTitle: "เน€เธฅเธเธซเธเนเธฒ",cQuestion: "เนเธชเนเธซเธเนเธฒเธ—เธตเนเธ•เนเธญเธเธเธฒเธฃ(เนเธชเนเธ•เธฑเธง , เน€เธเธทเนเธญเธ•เธฑเธงเนเธขเธเนเธเนเธ•เนเธฅเธฐเธซเธเนเธฒเธซเธฃเธทเธญเธ•เธฑเธง - เน€เธเธทเนเธญเธฃเธฐเธเธธเธเนเธงเธเธ•เธฑเธงเน€เธฅเธ)", cDefault: listPageStr});
 	if (pages === null){
 		return false;
 	}
-	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
+	var check = app.alert("เธ•เนเธญเธเธเธฒเธฃเนเธเนเธเธฑเธเธเนเธเธฑเนเธเธเธตเนเธซเธฃเธทเธญเนเธกเน ?", 2, 2, "เธขเธทเธเธขเธฑเธ");
 	if (check === 4){
 		var pagelist = pages.split(",");
 		var toBlack = this.getColorConvertAction();
@@ -161,18 +161,18 @@ function loop_ToBlack(){
 				this.bookmarkRoot.createChild(numPage, "this.pageNum="+numPage);
 			}
 		}
-		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
+		app.alert("เน€เธเธฅเธตเนเธขเธเธเนเธฒเน€เธฃเธตเธขเธเธฃเนเธญเธขเนเธฅเนเธง", 3);
 		return true;
 
 	}else{
 		//app.execDialog(convert_dialog);
-		//app.alert("จบการทำงาน");
+		//app.alert("เธเธเธเธฒเธฃเธ—เธณเธเธฒเธ");
 		return false;
 	}
 }
 
 function loop_ToColor_backup(){
-	var ask_conAll = app.alert("คุณต้องการแปลงทุกหน้าเป็นขาวดำก่อนใช้หรือไม ?", 2, 2, "แปลงทุกหน้า");
+	var ask_conAll = app.alert("เธเธธเธ“เธ•เนเธญเธเธเธฒเธฃเนเธเธฅเธเธ—เธธเธเธซเธเนเธฒเน€เธเนเธเธเธฒเธงเธ”เธณเธเนเธญเธเนเธเนเธซเธฃเธทเธญเนเธก ?", 2, 2, "เนเธเธฅเธเธ—เธธเธเธซเธเนเธฒ");
 	if(ask_conAll === 4){
 		var toBlack = this.getColorConvertAction();	
 		toBlack.matchAttributesAny = -1;
@@ -188,11 +188,11 @@ function loop_ToColor_backup(){
 			var result = this.colorConvertPage(rm,[toBlack],[]);
 		}
 	}
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
+	var pages = app.response({cTitle: "เน€เธฅเธเธซเธเนเธฒ",cQuestion: "เนเธชเนเธซเธเนเธฒเธ—เธตเนเธ•เนเธญเธเธเธฒเธฃ(เนเธชเนเธ•เธฑเธง , เน€เธเธทเนเธญเธ•เธฑเธงเนเธขเธเนเธเนเธ•เนเธฅเธฐเธซเธเนเธฒ)", cDefault: ""});
 	if (pages === null){
 		return false;
 	}
-	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
+	var check = app.alert("เธ•เนเธญเธเธเธฒเธฃเนเธเนเธเธฑเธเธเนเธเธฑเนเธเธเธตเนเธซเธฃเธทเธญเนเธกเน ?", 2, 2, "เธขเธทเธเธขเธฑเธ");
 	if (check === 4){
 		var pagelist = pages.split(",");
 		toBlack.matchAttributesAny = -1;
@@ -223,23 +223,23 @@ function loop_ToColor_backup(){
 				this.bookmarkRoot.createChild(numPage, "this.pageNum="+numPage);
 			}
 		}
-		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
+		app.alert("เน€เธเธฅเธตเนเธขเธเธเนเธฒเน€เธฃเธตเธขเธเธฃเนเธญเธขเนเธฅเนเธง", 3);
 		return true;
 
 	}else{
 		//app.execDialog(convert_dialog);
-		//app.alert("จบการทำงาน");
+		//app.alert("เธเธเธเธฒเธฃเธ—เธณเธเธฒเธ");
 		return false;
 	}
 }
 
 function select_bookmark(){
 	var list_bookmark = [];
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
+	var pages = app.response({cTitle: "เน€เธฅเธเธซเธเนเธฒ",cQuestion: "เนเธชเนเธซเธเนเธฒเธ—เธตเนเธ•เนเธญเธเธเธฒเธฃ(เนเธชเนเธ•เธฑเธง , เน€เธเธทเนเธญเธ•เธฑเธงเนเธขเธเนเธเนเธ•เนเธฅเธฐเธซเธเนเธฒ)", cDefault: ""});
 	if (pages === null){
 		return false;
 	}
-	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
+	var check = app.alert("เธ•เนเธญเธเธเธฒเธฃเนเธเนเธเธฑเธเธเนเธเธฑเนเธเธเธตเนเธซเธฃเธทเธญเนเธกเน ?", 2, 2, "เธขเธทเธเธขเธฑเธ");
 	if (check === 4){
 		var pagelist = pages.split(",");
 		for (var i in pagelist){
@@ -256,12 +256,12 @@ function select_bookmark(){
 				this.bookmarkRoot.createChild(numPage);
 			}
 		}
-		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
+		app.alert("เน€เธเธฅเธตเนเธขเธเธเนเธฒเน€เธฃเธตเธขเธเธฃเนเธญเธขเนเธฅเนเธง", 3);
 		return true;
 
 	}else{
 		//app.execDialog(convert_dialog);
-		//app.alert("จบการทำงาน");
+		//app.alert("เธเธเธเธฒเธฃเธ—เธณเธเธฒเธ");
 		return false;
 	}
 }
@@ -274,13 +274,13 @@ function insertBlankCur(){
 function loop_ToColor(){
 	listCur = countListNum(listCurPage);
 	listPageStr = listCur.join(",");
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
+	var pages = app.response({cTitle: "เน€เธฅเธเธซเธเนเธฒ",cQuestion: "เนเธชเนเธซเธเนเธฒเธ—เธตเนเธ•เนเธญเธเธเธฒเธฃ(เนเธชเนเธ•เธฑเธง , เน€เธเธทเนเธญเธ•เธฑเธงเนเธขเธเนเธเนเธ•เนเธฅเธฐเธซเธเนเธฒเธซเธฃเธทเธญเธ•เธฑเธง - เน€เธเธทเนเธญเธฃเธฐเธเธธเธเนเธงเธเธ•เธฑเธงเน€เธฅเธ)", cDefault: listPageStr});
 	pages.cDefault = "testing";
 	var listToColor = [];
 	if (pages === null){
 		return false;
 	}
-	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
+	var check = app.alert("เธ•เนเธญเธเธเธฒเธฃเนเธเนเธเธฑเธเธเนเธเธฑเนเธเธเธตเนเธซเธฃเธทเธญเนเธกเน ?", 2, 2, "เธขเธทเธเธขเธฑเธ");
 	if (check === 4){
 		var toBlack = this.getColorConvertAction();	
 		toBlack.matchAttributesAny = -1;
@@ -317,19 +317,19 @@ function loop_ToColor(){
 			}
 		}
 		//var result = this.colorConvertPage(countTo-1,[toBlack],[]);
-		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
+		app.alert("เน€เธเธฅเธตเนเธขเธเธเนเธฒเน€เธฃเธตเธขเธเธฃเนเธญเธขเนเธฅเนเธง", 3);
 		return true;
 
 	}else{
 		//app.execDialog(convert_dialog);
-		//app.alert("จบการทำงาน");
+		//app.alert("เธเธเธเธฒเธฃเธ—เธณเธเธฒเธ");
 		return false;
 	}
 }
 
 
 function extract_page(){
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: ""});
+	var pages = app.response({cTitle: "เน€เธฅเธเธซเธเนเธฒ",cQuestion: "เนเธชเนเธซเธเนเธฒเธ—เธตเนเธ•เนเธญเธเธเธฒเธฃ(เนเธชเนเธ•เธฑเธง , เน€เธเธทเนเธญเธ•เธฑเธงเนเธขเธเนเธเนเธ•เนเธฅเธฐเธซเธเนเธฒเธซเธฃเธทเธญเธ•เธฑเธง - เน€เธเธทเนเธญเธฃเธฐเธเธธเธเนเธงเธเธ•เธฑเธงเน€เธฅเธ)", cDefault: ""});
 	var pagelist = pages.split(",");
 	for (var i in pagelist){
 		var namefile = i;
@@ -348,7 +348,7 @@ function extract_page(){
 			extractPage(numPage-1, numPage-1, i+".pdf");
 		}
 	}
-	app.alert("extract สำเร็จ");
+	app.alert("extract เธชเธณเน€เธฃเนเธ");
 }
 
 function convert_cur_page(){
@@ -400,15 +400,15 @@ function clearAllPage(){
 
 function addText({_text, size, pageStart, pageEnd, rotation}){
 	this.addWatermarkFromText({
-		cText: _text, //ข้อความ
-		nFontSize: size, //ขนาดsizeตัวอักษร
-		nStart: pageStart, //กำหนดหน้าเริ่มต้น
-		nEnd: pageEnd, //กำหนดหน้าสิ้นสุด
-		nRotation: rotation, //หมุนตัวอักษร เช่น 180 ก็จะกลัวหัว
-		nHorizAlign: app.constants.align.left, //กำหนดตำแหน่งการวางตัวหนังสือซ้ายหรือขวา เช่น app.constants.align.left ก็จะเท่ากับตัวอักษรชิดไว้ซ้ายสุด
-		nVertAlign: app.constants.align.center, //กำหนดตำแหน่งการวางตัวหนังสือบนหรือล่าง เช่น app.constants.align.top ก็จะเท่ากับตัวอักษรชิดไว้บนสุด
-		nHorizValue: 20, nVertValue: 0 //กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
-		//อ่านfunctionเพิ่มเติมได้ที่ https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf หน้า274
+		cText: _text, //เธเนเธญเธเธงเธฒเธก
+		nFontSize: size, //เธเธเธฒเธ”sizeเธ•เธฑเธงเธญเธฑเธเธฉเธฃ
+		nStart: pageStart, //เธเธณเธซเธเธ”เธซเธเนเธฒเน€เธฃเธดเนเธกเธ•เนเธ
+		nEnd: pageEnd, //เธเธณเธซเธเธ”เธซเธเนเธฒเธชเธดเนเธเธชเธธเธ”
+		nRotation: rotation, //เธซเธกเธธเธเธ•เธฑเธงเธญเธฑเธเธฉเธฃ เน€เธเนเธ 180 เธเนเธเธฐเธเธฅเธฑเธงเธซเธฑเธง
+		nHorizAlign: app.constants.align.left, //เธเธณเธซเธเธ”เธ•เธณเนเธซเธเนเธเธเธฒเธฃเธงเธฒเธเธ•เธฑเธงเธซเธเธฑเธเธชเธทเธญเธเนเธฒเธขเธซเธฃเธทเธญเธเธงเธฒ เน€เธเนเธ app.constants.align.left เธเนเธเธฐเน€เธ—เนเธฒเธเธฑเธเธ•เธฑเธงเธญเธฑเธเธฉเธฃเธเธดเธ”เนเธงเนเธเนเธฒเธขเธชเธธเธ”
+		nVertAlign: app.constants.align.center, //เธเธณเธซเธเธ”เธ•เธณเนเธซเธเนเธเธเธฒเธฃเธงเธฒเธเธ•เธฑเธงเธซเธเธฑเธเธชเธทเธญเธเธเธซเธฃเธทเธญเธฅเนเธฒเธ เน€เธเนเธ app.constants.align.top เธเนเธเธฐเน€เธ—เนเธฒเธเธฑเธเธ•เธฑเธงเธญเธฑเธเธฉเธฃเธเธดเธ”เนเธงเนเธเธเธชเธธเธ”
+		nHorizValue: 20, nVertValue: 0 //เธเธณเธซเธเธ”เธเธงเธฒเธกเธซเนเธฒเธเธเธฒเธเธ•เธณเนเธซเธเนเธเธ—เธตเนเธงเธฒเธ เน€เธเนเธ เธงเธฒเธเธ•เธฑเธงเธญเธฑเธเธฉเธฃเนเธงเนเธเนเธฒเธขเธชเธธเธ”เธ–เนเธฒ nHorizValue เธขเธดเนเธเธ•เธฑเธงเน€เธฅเธเธกเธฒเธเธเนเธเธฐเธขเธดเนเธเธซเนเธฒเธเนเธเธ”เนเธฒเธเธเธงเธฒเธ–เนเธฒเธเนเธฒเน€เธเนเธเธฅเธเธเนเธเธฐเธเธฅเธฑเธเธเธฑเธ
+		//เธญเนเธฒเธfunctionเน€เธเธดเนเธกเน€เธ•เธดเธกเนเธ”เนเธ—เธตเน https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf เธซเธเนเธฒ274
 	})
 }
 
