@@ -75,14 +75,25 @@ function countListNum(arr){
 }
 
 function removePage(func){
-	if(func == "rmNotSelect"){
-		listCur = countListNum(listCurPage);
-		listPageStr = listCur.join(",");
-		var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
-		pages.cDefault = "testing";
-		var listToColor = [];
-		if (pages === null){
-			return false;
+	if(func == "rmBookmark"){
+		var allBookmark=this.bookmarkRoot.children.length;
+		//allBookmark = allBookmark-1;
+		var listPageSe = []
+		for (i=0;i<allBookmark;i++){
+			var page = this.bookmarkRoot.children[i].name;
+			page = parseInt(page);
+			listPageSe.push(page);
+		}
+		listPageSe = listPageSe.sort();
+		var check = app.alert("จะลบทุกหน้า "+listPageSe+" จริงหรือไม่?", 2, 2, "ยืนยัน");
+		if (check === 4){
+			for (i=this.numPages;i>0;i--){
+				if(listPageSe.indexOf(i) != -1){
+					this.deletePages(i-1);
+				}
+			}
+			app.alert("ลบเรียบร้อยแล้ว", 3);
+			app.execMenuItem("SaveAs")
 		}
 	}else if(func == "rmBookmarkNotSelect"){
 		var allBookmark=this.bookmarkRoot.children.length;
@@ -151,7 +162,8 @@ function loop_ToBlack(){
 			}
 		}
 		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
-		return true;
+		return true;
+
 	}else{
 		//app.execDialog(convert_dialog);
 		//app.alert("จบการทำงาน");
@@ -466,7 +478,7 @@ app.addToolButton({
 app.addToolButton({
 	cName: "test",
 	//oIcon: oIcon,
-	cExec: "addText({_text: 'test', pageStart: 0,pageEnd: 0, size: 12, rotation: -90})",
+	cExec: "addText({_text: 'google', pageStart: 0,pageEnd: 0, size: 12, rotation: -90})",
 	cTooltext: "test",
 	cEnable: true,
 	nPos: -1,
@@ -482,5 +494,5 @@ app.addToolButton({
 	cTooltext: "bookmark page"
 	});
 	
-app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: "removePage('rmBookmarkNotSelect')",cEnable: 1, nPos: 17});
-//app.addMenuItem({ cName: "&Check Black", cParent: "Tools", cExec: "loop_convert()",cEnable: 1, nPos: 16});
+app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: "removePage('rmBookmarkNotSelect')",cEnable: 1});
+app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
