@@ -401,13 +401,14 @@ function clearAllPage(){
 function addText({_text, size, pageStart, pageEnd, rotation}){
 	this.addWatermarkFromText({
 		cText: _text, //ข้อความ
+		cFont: font.Helv,
 		nFontSize: size, //ขนาดsizeตัวอักษร
 		nStart: pageStart, //กำหนดหน้าเริ่มต้น
 		nEnd: pageEnd, //กำหนดหน้าสิ้นสุด
 		nRotation: rotation, //หมุนตัวอักษร เช่น 180 ก็จะกลัวหัว
 		nHorizAlign: app.constants.align.left, //กำหนดตำแหน่งการวางตัวหนังสือซ้ายหรือขวา เช่น app.constants.align.left ก็จะเท่ากับตัวอักษรชิดไว้ซ้ายสุด
 		nVertAlign: app.constants.align.center, //กำหนดตำแหน่งการวางตัวหนังสือบนหรือล่าง เช่น app.constants.align.top ก็จะเท่ากับตัวอักษรชิดไว้บนสุด
-		nHorizValue: 20, nVertValue: 0 //กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
+		nHorizValue: 0, nVertValue: 0		//กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
 		//อ่านfunctionเพิ่มเติมได้ที่ https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf หน้า274
 	})
 }
@@ -478,11 +479,20 @@ app.addToolButton({
 app.addToolButton({
 	cName: "test",
 	//oIcon: oIcon,
-	cExec: "addText({_text: 'google', pageStart: 0,pageEnd: 0, size: 12, rotation: -90})",
+	cExec: "addText({_text: 'testing', pageStart: 0,pageEnd: 0, size: 12, rotation: -90})",
 	cTooltext: "test",
 	cEnable: true,
-	nPos: -1,
+	//nPos: -1,
 	cTooltext: "test"
+	});
+app.addToolButton({
+	cName: "stampFileName",
+	//oIcon: oIcon,
+	cExec: "addText({_text: this.documentFileName, pageStart: 0,pageEnd: 0, size: 12, rotation: -90})",
+	cTooltext: "stampFileName",
+	cEnable: true,
+	//nPos: -1,
+	cTooltext: "stampFileName"
 	});
 app.addToolButton({
 	cName: "bookmark page",
@@ -490,7 +500,7 @@ app.addToolButton({
 	cExec: "select_bookmark()",
 	cTooltext: "bookmark page",
 	cEnable: true,
-	nPos: -1,
+	//nPos: -1,
 	cTooltext: "bookmark page"
 	});
 	
