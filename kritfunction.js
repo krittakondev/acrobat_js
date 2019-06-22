@@ -408,7 +408,7 @@ function addText({_text, size, pageStart, pageEnd, rotation}){
 		nRotation: rotation, //หมุนตัวอักษร เช่น 180 ก็จะกลัวหัว
 		nHorizAlign: app.constants.align.left, //กำหนดตำแหน่งการวางตัวหนังสือซ้ายหรือขวา เช่น app.constants.align.left ก็จะเท่ากับตัวอักษรชิดไว้ซ้ายสุด
 		nVertAlign: app.constants.align.center, //กำหนดตำแหน่งการวางตัวหนังสือบนหรือล่าง เช่น app.constants.align.top ก็จะเท่ากับตัวอักษรชิดไว้บนสุด
-		nHorizValue: 0, nVertValue: 0		//กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
+		nHorizValue: 2, nVertValue: 0		//กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
 		//อ่านfunctionเพิ่มเติมได้ที่ https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf หน้า274
 	})
 }
@@ -488,7 +488,7 @@ app.addToolButton({
 app.addToolButton({
 	cName: "stampFileName",
 	//oIcon: oIcon,
-	cExec: "addText({_text: this.documentFileName, pageStart: 0,pageEnd: 0, size: 12, rotation: -90})",
+	cExec: "addText({_text: this.documentFileName, pageStart: 0,pageEnd: 0, size: 5, rotation: -90})",
 	cTooltext: "stampFileName",
 	cEnable: true,
 	//nPos: -1,
