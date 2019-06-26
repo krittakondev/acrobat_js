@@ -131,16 +131,14 @@ function loop_ToBlack(){
 	if (check === 4){
 		var pagelist = pages.split(",");
 		var toBlack = this.getColorConvertAction();
-		//toBlack.matchAttributesAny = -1;
-		toBlack.matchAttributesAll = constants.objectFlags.ObjOverprinting;
-		//toBlack.matchSpaceTypeAny = ~toBlack.constants.spaceFlags.GraySpace;
-		//toBlack.matchIntent = toBlack.constants.renderingIntents.Any;
+		toBlack.matchAttributesAny = -1;
+		toBlack.matchSpaceTypeAny = ~toBlack.constants.spaceFlags.GraySpace;
+		toBlack.matchIntent = toBlack.constants.renderingIntents.Any;
 		toBlack.convertProfile = "Gray Gamma 2.2";
-		//toBlack.convertIntent = toBlack.constants.renderingIntents.Document
+		toBlack.convertIntent = toBlack.constants.renderingIntents.Document
 		toBlack.embed = false;
 		toBlack.preserveBlack = false;
 		toBlack.useBlackPointCompensation = true;
-		
 		toBlack.action = toBlack.constants.actions.Convert;
 		for (var i in pagelist){
 			
