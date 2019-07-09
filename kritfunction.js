@@ -411,6 +411,60 @@ function addText({_text, size, pageStart, pageEnd, rotation}){
 	})
 }
 
+function stampTextOnPage(){
+	var varText = app.response({cTitle: "ข้อความ",cQuestion: "put text for stamp?", cDefault: ""});
+	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "Enter page number", cDefault: "all"});
+	if (pages === null){
+		return false;
+	}
+	var check = app.alert("Do you want use this fucntion ?", 2, 2, "ยืนยัน");
+	if (check === 4){
+		var pagelist = pages.split(",");
+		for (var i in pagelist){
+			if(pagelist[i].indexOf("-") != -1){
+				var check2loop = true
+				var listNumTo = pagelist[i].split("-");
+				var Nstart = parseInt(listNumTo[0]);
+				var Nend = parseInt(listNumTo[1]);
+				this.addWatermarkFromText({
+					cText: varText, //ข้อความ
+					cFont: font.Helv,
+					nFontSize: 5, //ขนาดsizeตัวอักษร
+					nStart: Nstart, //กำหนดหน้าเริ่มต้น
+					nEnd: Nend, //กำหนดหน้าสิ้นสุด
+					nRotation: -90, //หมุนตัวอักษร เช่น 180 ก็จะกลัวหัว
+					nHorizAlign: app.constants.align.left, //กำหนดตำแหน่งการวางตัวหนังสือซ้ายหรือขวา เช่น app.constants.align.left ก็จะเท่ากับตัวอักษรชิดไว้ซ้ายสุด
+					nVertAlign: app.constants.align.center, //กำหนดตำแหน่งการวางตัวหนังสือบนหรือล่าง เช่น app.constants.align.top ก็จะเท่ากับตัวอักษรชิดไว้บนสุด
+					nHorizValue: 2, nVertValue: 0		//กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
+					//อ่านfunctionเพิ่มเติมได้ที่ https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf หน้า274
+				})
+			}else{
+				var numPage = parseInt(pagelist[i]);			
+				this.addWatermarkFromText({
+					cText: varText, //ข้อความ
+					cFont: font.Helv,
+					nFontSize: 5, //ขนาดsizeตัวอักษร
+					nStart: numPage, //กำหนดหน้าเริ่มต้น
+					nEnd: numPage, //กำหนดหน้าสิ้นสุด
+					nRotation: -90, //หมุนตัวอักษร เช่น 180 ก็จะกลัวหัว
+					nHorizAlign: app.constants.align.left, //กำหนดตำแหน่งการวางตัวหนังสือซ้ายหรือขวา เช่น app.constants.align.left ก็จะเท่ากับตัวอักษรชิดไว้ซ้ายสุด
+					nVertAlign: app.constants.align.center, //กำหนดตำแหน่งการวางตัวหนังสือบนหรือล่าง เช่น app.constants.align.top ก็จะเท่ากับตัวอักษรชิดไว้บนสุด
+					nHorizValue: 2, nVertValue: 0		//กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
+					//อ่านfunctionเพิ่มเติมได้ที่ https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf หน้า274
+				})
+			}
+		}
+		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
+		return true;
+
+	}else{
+		//app.execDialog(convert_dialog);
+		//app.alert("จบการทำงาน");
+		return false;
+	}
+}
+
+
 app.addToolButton({
 	cName: "add list",
 	//oIcon: oIcon,
@@ -477,7 +531,7 @@ app.addToolButton({
 app.addToolButton({
 	cName: "test",
 	//oIcon: oIcon,
-	cExec: "addText({_text: 'testing', pageStart: 0,pageEnd: 0, size: 12, rotation: -90})",
+	cExec: "stampTextOnPage()",
 	cTooltext: "test",
 	cEnable: true,
 	//nPos: -1,
