@@ -411,6 +411,21 @@ function addText({_text, size, pageStart, pageEnd, rotation}){
 	})
 }
 
+function addTextCorver({_text, size, bet}){
+	this.addWatermarkFromText({
+		cText: _text, //ข้อความ
+		cFont: font.Helv,
+		nFontSize: size, //ขนาดsizeตัวอักษร
+		nStart: 0, //กำหนดหน้าเริ่มต้น
+		nEnd: this.pageNums, //กำหนดหน้าสิ้นสุด
+		nRotation: 0, //หมุนตัวอักษร เช่น 180 ก็จะกลัวหัว
+		nHorizAlign: app.constants.align.top, //กำหนดตำแหน่งการวางตัวหนังสือซ้ายหรือขวา เช่น app.constants.align.left ก็จะเท่ากับตัวอักษรชิดไว้ซ้ายสุด
+		nVertAlign: app.constants.align.bottom, //กำหนดตำแหน่งการวางตัวหนังสือบนหรือล่าง เช่น app.constants.align.top ก็จะเท่ากับตัวอักษรชิดไว้บนสุด
+		nHorizValue: 0, nVertValue: bet		//กำหนดความห่างจากตำแหน่งที่วาง เช่น วางตัวอักษรไว้ซ้ายสุดถ้า nHorizValue ยิ่งตัวเลขมากก็จะยิ่งห่างไปด้านขวาถ้าค่าเป็นลบก็จะกลับกัน
+		//อ่านfunctionเพิ่มเติมได้ที่ https://www.adobe.com/content/dam/acom/en/devnet/acrobat/pdfs/js_api_reference.pdf หน้า274
+	})
+}
+
 function stampTextOnPage(){
 	var varText = app.response({cTitle: "ข้อความ",cQuestion: "put text for stamp?", cDefault: ""});
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "Enter page number", cDefault: "all"});
@@ -545,6 +560,16 @@ app.addToolButton({
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "stampFileName"
+	});
+	
+app.addToolButton({
+	cName: "stampFileName(Cover)",
+	//oIcon: oIcon,
+	cExec: "addTextCorver({_text:this.documentFileName, size: 5, bet: 6})",
+	cTooltext: "stampFileName(Cover)",
+	cEnable: true,
+	//nPos: -1,
+	cTooltext: "stampFileName(Cover)"
 	});
 app.addToolButton({
 	cName: "bookmark page",
