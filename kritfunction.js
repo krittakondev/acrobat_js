@@ -1,4 +1,4 @@
-var listCurPage = []
+var listCurPage = [];
 
 function backup(numPage){
 	// Get a color convert action
@@ -117,7 +117,6 @@ function removePage(func){
 		}
 		
 	}
-	
 }
 
 function loop_ToBlack(){
@@ -231,9 +230,12 @@ function loop_ToColor_backup(){
 	}
 }
 
-function select_bookmark(){
+function select_bookmark(msg){
+	if (msg === undefined){
+		msg = "";
+	}
 	var list_bookmark = [];
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
+	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: msg});
 	if (pages === null){
 		return false;
 	}
@@ -483,36 +485,37 @@ function getOneSide(){
 	var isOneSide = []
 	var list_oneSide = [];
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
-	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
-	if (check === 4){
-		var pagelist = pages.split(",");
-		for (var i in pagelist){
-			if(pagelist[i].indexOf("-") != -1){
-				var check2loop = true
-				var listNumTo = pagelist[i].split("-");
-				var Nstart = parseInt(listNumTo[0]);
-				var Nend = parseInt(listNumTo[1]);
-				for(var countTo=Nstart;countTo<=Nend;countTo++){	
-					this.bookmarkRoot.createChild(countTo);
-				}
-			}else{
-				
+	var pagelist = pages.split(",");
+	var listBlank = [];
+	for (var i in pagelist){
+		if(pagelist[i].indexOf("-") != -1){
+			var check2loop = true
+			var listNumTo = pagelist[i].split("-");
+			var Nstart = parseInt(listNumTo[0]);
+			var Nend = parseInt(listNumTo[1]);
+			for(var countTo=Nstart;countTo<=Nend;countTo++){	
+				listBlank.push(countTo);
 			}
-			for (var i=0;i<=pagelist.length;i++){
-					/*isOneSide.push*/
-					app.alert("testing")
-					//parseInt(pagelist[i])-(1+i)
-			}
+		}else{
+			listBlank.push(pagelist[i]);
 		}
-		app.alert(pagelist.length);
-		return true;
-
-	}else{
-		//app.alert("จบการทำงาน");
-		return false;
 	}
-}
+	for (var i=0;i<listBlank.length;i++){
+		isOneSide.push(parseInt(listBlank[i])-(1+i));
+	}
+	var strOneSide = isOneSide.join(",");
+	return strOneSide;
 
+}
+function getResult(func){
+	var askCopy = app.response("this is your result ", "result", func());
+	/*if (askCopy){
+		app.execMenuItem("Copy");
+		return true;
+	}else{
+		return false;
+	}*/
+}
 app.addToolButton({
 	cName: "add list",
 	//oIcon: oIcon,
@@ -615,3 +618,4 @@ app.addToolButton({
 	
 app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: "removePage('rmBookmarkNotSelect')",cEnable: 1});
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
+app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
