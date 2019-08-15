@@ -170,7 +170,7 @@ function loop_ToBlack(){
 }
 
 function loop_ToColor_backup(){
-	var ask_conAll = app.alert("คุณต้องการแปลงทุกหน้าเป็นขาวดำก่อนใช้หรือไม ?", 2, 2, "แปลงทุกหน้า");
+	/*var ask_conAll = app.alert("คุณต้องการแปลงทุกหน้าเป็นขาวดำก่อนใช้หรือไม ?", 2, 2, "แปลงทุกหน้า");
 	if(ask_conAll === 4){
 		var toBlack = this.getColorConvertAction();	
 		toBlack.matchAttributesAny = -1;
@@ -185,7 +185,7 @@ function loop_ToColor_backup(){
 		for(var rm=0;rm<=this.numPages;rm++){
 			var result = this.colorConvertPage(rm,[toBlack],[]);
 		}
-	}
+	}*/
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
 	if (pages === null){
 		return false;
@@ -479,6 +479,39 @@ function stampTextOnPage(){
 	}
 }
 
+function getOneSide(){
+	var isOneSide = []
+	var list_oneSide = [];
+	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
+	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
+	if (check === 4){
+		var pagelist = pages.split(",");
+		for (var i in pagelist){
+			if(pagelist[i].indexOf("-") != -1){
+				var check2loop = true
+				var listNumTo = pagelist[i].split("-");
+				var Nstart = parseInt(listNumTo[0]);
+				var Nend = parseInt(listNumTo[1]);
+				for(var countTo=Nstart;countTo<=Nend;countTo++){	
+					this.bookmarkRoot.createChild(countTo);
+				}
+			}else{
+				
+			}
+			for (var i=0;i<=pagelist.length;i++){
+					/*isOneSide.push*/
+					app.alert("testing")
+					//parseInt(pagelist[i])-(1+i)
+			}
+		}
+		app.alert(pagelist.length);
+		return true;
+
+	}else{
+		//app.alert("จบการทำงาน");
+		return false;
+	}
+}
 
 app.addToolButton({
 	cName: "add list",
@@ -560,8 +593,7 @@ app.addToolButton({
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "stampFileName"
-	});
-	
+	});	
 app.addToolButton({
 	cName: "stampFileName(Cover)",
 	//oIcon: oIcon,
