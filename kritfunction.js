@@ -516,6 +516,12 @@ function getResult(func){
 		return false;
 	}*/
 }
+
+function getListPage(){
+	listCur = countListNum(listCurPage);
+	listPageStr = listCur.join(",");
+	return listPageStr;
+}
 app.addToolButton({
 	cName: "add list",
 	//oIcon: oIcon,
@@ -615,7 +621,9 @@ app.addToolButton({
 	//nPos: -1,
 	cTooltext: "bookmark page"
 	});
+
 	
 app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: "removePage('rmBookmarkNotSelect')",cEnable: 1});
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
 app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
+app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
