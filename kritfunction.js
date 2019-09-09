@@ -1,4 +1,45 @@
-var listCurPage = []
+var listCurPage = [];
+
+var totalTools = {
+	description: 
+	{
+		name: "AAAservice Tools",
+		align_children: "align_left",
+		width: 500,
+		height: 300,
+		elements: 
+		[
+			{
+				type: "view",
+				elements: 
+				[
+					{
+						type: "static_text",
+						name: "bookmark function"
+					},
+					{
+						type: "cluster",
+						
+						elements: 
+						[
+							{
+								type: "button",
+								name: "bookmark page",
+								selectBookmark: function(){
+									select_bookmark()
+								}
+							}
+						]
+					},
+					{
+						type: "ok"
+					}
+				],
+				
+			}
+		]
+	}
+}
 
 function backup(numPage){
 	// Get a color convert action
@@ -74,6 +115,26 @@ function countListNum(arr){
 	return result
 }
 
+function bookmarkToBlank(){
+	Rect = this.getPageBox()
+	var allBookmark=this.bookmarkRoot.children.length;
+	//allBookmark = allBookmark-1;
+	var listPageSe = []
+	for (i=0;i<allBookmark;i++){
+		var page = this.bookmarkRoot.children[i].name;
+		page = parseInt(page);
+		listPageSe.push(page);
+	}
+	listPageSe = listPageSe.sort();
+	for (i=this.numPages;i>0;i--){
+		if(listPageSe.indexOf(i) != -1){
+			this.newPage(i);
+		}
+	}
+	app.alert("ลบเรียบร้อยแล้ว", 3);
+	app.execMenuItem("SaveAs")
+}
+
 function removePage(func){
 	if(func == "rmBookmark"){
 		var allBookmark=this.bookmarkRoot.children.length;
@@ -117,7 +178,6 @@ function removePage(func){
 		}
 		
 	}
-	
 }
 
 function loop_ToBlack(){
@@ -132,10 +192,10 @@ function loop_ToBlack(){
 		var pagelist = pages.split(",");
 		var toBlack = this.getColorConvertAction();
 		toBlack.matchAttributesAny = -1;
-		toBlack.matchSpaceTypeAny = ~toBlack.constants.spaceFlags.GraySpace;
+		toBlack.matchSpaceTypeAny = ~toBlack.constants.spaceFlags.DeviceSpace;
 		toBlack.matchIntent = toBlack.constants.renderingIntents.Any;
 		toBlack.convertProfile = "Gray Gamma 2.2";
-		toBlack.convertIntent = toBlack.constants.renderingIntents.Document
+		toBlack.convertIntent = toBlack.constants.renderingIntents.Document;
 		toBlack.embed = false;
 		toBlack.preserveBlack = false;
 		toBlack.useBlackPointCompensation = true;
@@ -159,8 +219,8 @@ function loop_ToBlack(){
 				this.bookmarkRoot.createChild(numPage, "this.pageNum="+numPage);
 			}
 		}
-		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
-		return true;
+		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว ", 3);
+		//return true;
 
 	}else{
 		//app.execDialog(convert_dialog);
@@ -170,7 +230,7 @@ function loop_ToBlack(){
 }
 
 function loop_ToColor_backup(){
-	var ask_conAll = app.alert("คุณต้องการแปลงทุกหน้าเป็นขาวดำก่อนใช้หรือไม ?", 2, 2, "แปลงทุกหน้า");
+	/*var ask_conAll = app.alert("คุณต้องการแปลงทุกหน้าเป็นขาวดำก่อนใช้หรือไม ?", 2, 2, "แปลงทุกหน้า");
 	if(ask_conAll === 4){
 		var toBlack = this.getColorConvertAction();	
 		toBlack.matchAttributesAny = -1;
@@ -185,7 +245,7 @@ function loop_ToColor_backup(){
 		for(var rm=0;rm<=this.numPages;rm++){
 			var result = this.colorConvertPage(rm,[toBlack],[]);
 		}
-	}
+	}*/
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
 	if (pages === null){
 		return false;
@@ -231,9 +291,12 @@ function loop_ToColor_backup(){
 	}
 }
 
-function select_bookmark(){
+function select_bookmark(msg){
+	if (msg === undefined){
+		msg = "";
+	}
 	var list_bookmark = [];
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
+	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: msg});
 	if (pages === null){
 		return false;
 	}
@@ -379,7 +442,8 @@ function addList(){
 }
 
 function test(){
-	this.getPageBox("Crop", this.pageNum)
+	//app.execDialog(totalTools);
+	this.bookmarkToBlank();
 }
 function Undo(){
 	listCurPage.pop()
@@ -479,6 +543,70 @@ function stampTextOnPage(){
 	}
 }
 
+function getOneSide(){
+	var isOneSide = []
+	var list_oneSide = [];
+	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: ""});
+	var pagelist = pages.split(",");
+	var listBlank = [];
+	for (var i in pagelist){
+		if(pagelist[i].indexOf("-") != -1){
+			var check2loop = true
+			var listNumTo = pagelist[i].split("-");
+			var Nstart = parseInt(listNumTo[0]);
+			var Nend = parseInt(listNumTo[1]);
+			for(var countTo=Nstart;countTo<=Nend;countTo++){	
+				listBlank.push(countTo);
+			}
+		}else{
+			listBlank.push(pagelist[i]);
+		}
+	}
+	for (var i=0;i<listBlank.length;i++){
+		isOneSide.push(parseInt(listBlank[i])-(1+i));
+	}
+	var strOneSide = isOneSide.join(",");
+	return strOneSide;
+
+}
+function getResult(func){
+	var askCopy = app.response("this is your result ", "result", func());
+	/*if (askCopy){
+		app.execMenuItem("Copy");
+		return true;
+	}else{
+		return false;
+	}*/
+}
+
+function getListPage(){
+	listCur = countListNum(listCurPage);
+	listPageStr = listCur.join(",");
+	return listPageStr;
+}
+
+function blankPage(){
+	askPage = app.response("ใส่ตัวเลขหน้า ที่ต้องการแทรกหน้าว่างไว้ด้านหลัง", "insert blank page", getListPage());
+	var pagelist = askPage.split(",");
+	Rect = this.getPageBox("Crop");
+	for (i=0;i<this.pageNums;i++){
+		
+		if (parseInt(pagelist[i])-1 > pagelist.length){
+			pageErr = [];
+			pageErr.push(pagelist[i]);
+		}
+	}
+	if(typeof pageErr != "undefined"){
+		app.alert("หาหน้าที่ "+ pageErr.join(",") +" ไม่เจอ");
+	}else{
+		for (i=0;i<pagelist.length;i++){
+			this.newPage(pagelist[i]-1, Rect[0], Rect[1]);
+		}
+		app.alert("succes", 2, 2);
+	}
+}
+
+
 
 app.addToolButton({
 	cName: "add list",
@@ -546,12 +674,13 @@ app.addToolButton({
 app.addToolButton({
 	cName: "test",
 	//oIcon: oIcon,
-	cExec: "stampTextOnPage()",
+	cExec: "test()",
 	cTooltext: "test",
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "test"
 	});
+	
 app.addToolButton({
 	cName: "stampFileName",
 	//oIcon: oIcon,
@@ -560,8 +689,7 @@ app.addToolButton({
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "stampFileName"
-	});
-	
+	});	
 app.addToolButton({
 	cName: "stampFileName(Cover)",
 	//oIcon: oIcon,
@@ -580,6 +708,9 @@ app.addToolButton({
 	//nPos: -1,
 	cTooltext: "bookmark page"
 	});
-	
+
 app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: "removePage('rmBookmarkNotSelect')",cEnable: 1});
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
+app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
+app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
+//app.execDialog(totalTools);
