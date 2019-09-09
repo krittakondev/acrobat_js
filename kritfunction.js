@@ -1,45 +1,5 @@
 var listCurPage = [];
-
-var totalTools = {
-	description: 
-	{
-		name: "AAAservice Tools",
-		align_children: "align_left",
-		width: 500,
-		height: 300,
-		elements: 
-		[
-			{
-				type: "view",
-				elements: 
-				[
-					{
-						type: "static_text",
-						name: "bookmark function"
-					},
-					{
-						type: "cluster",
-						
-						elements: 
-						[
-							{
-								type: "button",
-								name: "bookmark page",
-								selectBookmark: function(){
-									select_bookmark()
-								}
-							}
-						]
-					},
-					{
-						type: "ok"
-					}
-				],
-				
-			}
-		]
-	}
-}
+var thisDoc = {};
 
 function backup(numPage){
 	// Get a color convert action
@@ -442,8 +402,12 @@ function addList(){
 }
 
 function test(){
-	//app.execDialog(totalTools);
-	this.bookmarkToBlank();
+	thisDoc = app.openDoc({
+		cPath: this.path,
+		bHidden: true
+	});
+	app.execDialog(totalTools);
+	//this.bookmarkToBlank();
 }
 function Undo(){
 	listCurPage.pop()
@@ -606,6 +570,63 @@ function blankPage(){
 	}
 }
 
+/* 
+	dialog สำหรับหน้ารวมtools
+*/
+var totalTools = { 
+	"slbm": function(){  // เลือกหน้าบุ๊คมารค์
+		select_bookmark("", thisDoc);
+	},
+	"rmbm": function(){
+		removePage('rmBookmark');
+	},
+	description: 
+	{
+		name: "AAAservice Tools",
+		alignment: "align_offscreen",
+		//width: 500,
+		//height: 300,
+		item_id: "main",
+		elements: 
+		[
+			{
+				type: "view",
+				width: 500,
+				height: 200,
+				elements: 
+				[
+					{
+						type: "static_text",
+						name: "bookmark tools",
+						bold: true
+					},
+					{
+						type: "cluster",
+						align_children: "align_row",
+						elements: 
+						[
+							{
+								type: "button",
+								name: "bookmark page",
+								item_id: "slbm"
+							},
+							{
+								type: "button",
+								name: "remove bookmark page",
+								item_id: "rmbm",
+							}
+						]
+					}
+				]
+				
+			},
+			{
+				type: "ok",
+				ok_name: "close"
+			}
+		]
+	}
+}
 
 
 app.addToolButton({
