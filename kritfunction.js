@@ -1,5 +1,5 @@
 var listCurPage = [];
-var thisDoc = {};
+
 
 function backup(numPage){
 	// Get a color convert action
@@ -71,6 +71,7 @@ function countListNum(arr){
 			start = arr[i+1];
 		}
 	}
+	//result = result.pop()
 	result = result.split(",")
 	return result
 }
@@ -401,13 +402,113 @@ function addList(){
 	listCurPage = listCurPage.sort(function(a, b){return a - b});
 }
 
+function dotheDialog(dialog,doc){
+	dialog.doc = doc;
+	var retn = app.execDialog( dialog )
+}
+
+var dialogGetSize = {
+	commit: function(dialog){
+		var results = dialog.store();
+		var listA3 = [];
+		var listA4 = [];
+		var listNone = [];
+		var listTotals = [];
+		for (i=0;i<this.doc.numPages;i++){
+			Rect = this.doc.getPageBox("Crop", parseInt(i));
+			if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
+				listA3.push(parseInt(i)+1);  //"A3";
+			}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
+				listA4.push(parseInt(i)+1);  //"A4";
+			}else{
+				listNone.push(parseInt(i)+1);   //"none";
+			}
+		}
+		if (results["lta4"]){
+			if(listA4!=""){
+				listTotals.push(listA4);
+			}
+		}
+		if (results["lta3"]){
+			if(listA3!=""){
+				listTotals.push(listA3);
+			}
+		}
+		if (results["ltnn"]){
+			if(listNone!=""){
+				listTotals.push(listNone);
+			}
+		}
+		listTotals = listTotals.sort();
+		app.response({cTitle: "result",cQuestion: "your pages", cDefault: listTotals.join(",")});
+	},
+	description: 
+	{
+		name: "get size page",
+		elements: [
+		{
+			type: "cluster",
+			elements: [
+			{
+				type: "check_box",
+				name: "A4",
+				item_id: "lta4"
+			},
+			{
+				type: "check_box",
+				name: "A3",
+				item_id: "lta3"
+			},
+			{
+				type: "check_box",
+				name: "none",
+				item_id: "ltnn"
+			}]
+			
+		},
+		{
+			type: "ok_cancel"
+		}]
+	}
+}
+
+function checkCropSize(){
+	/*
+	ถ้าเงือนไขนี้เป็นจริงเท่ากับว่าเป็น A4
+	(((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850)))
+
+	ถ้าเงือนไขนี้เป็นจริงเท่ากับว่าเป็น A3
+	(((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200)))
+	*/
+	var listStatus = [];
+	for (i=0;i<this.numPages;i++){
+		Rect = this.getPageBox("Crop", parseInt(i));
+		if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
+			listStatus.push("A3");
+		}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
+			listStatus.push("A4");
+		}else{
+			listStatus.push("none");
+		}
+		
+	}
+	app.alert(listStatus.join(","));
+}
+
+function getPageOf_A3(){
+	checkCropSize();
+}
+
 function test(){
-	thisDoc = app.openDoc({
+	/*thisDoc = app.openDoc({
 		cPath: this.path,
 		bHidden: true
-	});
-	app.execDialog(totalTools);
+	});*/
+	//app.execDialog(totalTools);
 	//this.bookmarkToBlank();
+	//dotheDialog(dialogGetSize, this);
+	dialogGetSize.doc = this;
+	app.execDialog(dialogGetSize);
 }
 function Undo(){
 	listCurPage.pop()
@@ -734,4 +835,3 @@ app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: 
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
 app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
 app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
-//app.execDialog(totalTools);
