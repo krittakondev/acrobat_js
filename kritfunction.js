@@ -96,6 +96,10 @@ function bookmarkToBlank(){
 	app.execMenuItem("SaveAs")
 }
 
+function clearBookmark(){
+	this.bookmarkRoot.remove();
+}
+
 function removePage(func){
 	if(func == "rmBookmark"){
 		var allBookmark=this.bookmarkRoot.children.length;
@@ -263,6 +267,7 @@ function select_bookmark(msg){
 	}
 	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
 	if (check === 4){
+		this.bookmarkRoot.remove(); //ลบบุ๊คมาร์คทั้งหมดก่อนbookmarkใหม่
 		var pagelist = pages.split(",");
 		for (var i in pagelist){
 			if(pagelist[i].indexOf("-") != -1){
@@ -837,6 +842,15 @@ app.addToolButton({
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "bookmark page"
+	});
+app.addToolButton({
+	cName: "clearBookmark",
+	//oIcon: oIcon,
+	cExec: "clearBookmark()",
+	cTooltext: "clearBookmark",
+	cEnable: true,
+	//nPos: -1,
+	cTooltext: "clearBookmark"
 	});
 
 app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: "removePage('rmBookmarkNotSelect')",cEnable: 1});
