@@ -1,5 +1,11 @@
 var listCurPage = [];
 
+function strPagesFormat(strPage){ // ยังไม่ได้ใช้อะไร
+	var listPages = [];
+	listPages = strPage.split(",");
+	listPages = listPages.map(Number);
+	listPages = listPages.sort(function(a, b){return a - b});
+}
 
 function backup(numPage){
 	// Get a color convert action
@@ -54,6 +60,7 @@ function dialogColor(){
 
 function countListNum(arr){
 	//var arr = [1,2,3,4,8,15,16,17,20,21,30];
+	//arr = arr.sort(function(a, b){return a - b});
 	var start = arr[0];
 	var end = arr[0];
 	var result = "";
@@ -71,7 +78,7 @@ function countListNum(arr){
 			start = arr[i+1];
 		}
 	}
-	//result = result.pop()
+	result = result.slice(0, result.length-1)
 	result = result.split(",")
 	return result
 }
@@ -652,6 +659,7 @@ function blankPage(){
 	**** Dialog zone ****
 */
 
+
 var dialogGetSize = { // dialog แยกขนาดกระดาษ
 	commit_backup: function(dialog){ // blackup สำหรับ function ปุ่ม ok
 		var results = dialog.store();
@@ -751,7 +759,7 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 		var listTotals = strTotals.split(",").map(Number);
 		listTotals = listTotals.sort(function(a, b){return a-b});
 		strTotals = listTotals.join(",");
-		dialog.load({"page": strTotals});
+		dialog.load({"page": countListNum(listTotals).join(",")});
 	},
 	description: 
 	{
