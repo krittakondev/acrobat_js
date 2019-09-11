@@ -261,11 +261,11 @@ function select_bookmark(msg){
 		msg = "";
 	}
 	var list_bookmark = [];
-	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้า)", cDefault: msg});
+	var pages = app.response({cTitle: "pages number",cQuestion: "Enter your page(can use , and -)", cDefault: msg});
 	if (pages === null){
 		return false;
 	}
-	var check = app.alert("ต้องการใช้ฟังค์ชั่นนี้หรือไม่ ?", 2, 2, "ยืนยัน");
+	var check = app.alert("All previous bookmarks will be deleted. What do you want continue?", 2, 2, "confirm");
 	if (check === 4){
 		this.bookmarkRoot.remove(); //ลบบุ๊คมาร์คทั้งหมดก่อนbookmarkใหม่
 		var pagelist = pages.split(",");
