@@ -283,7 +283,7 @@ function select_bookmark(msg){
 				this.bookmarkRoot.createChild(numPage);
 			}
 		}
-		app.alert("เปลี่ยนค่าเรียบร้อยแล้ว", 3);
+		app.alert("success", 3);
 		return true;
 
 	}else{
@@ -412,80 +412,9 @@ function dotheDialog(dialog,doc){
 	var retn = app.execDialog( dialog )
 }
 
-var dialogGetSize = {
-	commit: function(dialog){
-		var results = dialog.store();
-		var listA3 = [];
-		var listA4 = [];
-		var listNone = [];
-		var listTotals = [];
-		var seSize = "";
-		for (i=0;i<this.doc.numPages;i++){
-			Rect = this.doc.getPageBox("Crop", parseInt(i));
-			if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
-				listA3.push(parseInt(i)+1);  //"A3";
-			}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
-				listA4.push(parseInt(i)+1);  //"A4";
-			}else{
-				listNone.push(parseInt(i)+1);   //"none";
-			}
-		}
-		if (results["lta4"]){
-			if(listA4!=""){
-				listTotals.push(listA4);
-				seSize += "A4 "
-			}
-		}
-		if (results["lta3"]){
-			if(listA3!=""){
-				listTotals.push(listA3);
-				seSize += "A3 "
-			}
-		}
-		if (results["ltnn"]){
-			if(listNone!=""){
-				listTotals.push(listNone);
-				seSize += "Other "
-			}
-		}
-		//listTotals = listTotals.join(",");
-		//listTotals = listTotals.split(",");
-		//listTotals.map(Number);
-		listTotals = listTotals.sort();
-		
-		app.response({cTitle: "result",cQuestion: "pages size of: "+seSize, cDefault: listTotals.join(",")});
-	},
-	description: 
-	{
-		name: "get size page",
-		elements: [
-		{
-			type: "cluster",
-			elements: [
-			{
-				type: "check_box",
-				name: "A4",
-				item_id: "lta4"
-			},
-			{
-				type: "check_box",
-				name: "A3",
-				item_id: "lta3"
-			},
-			{
-				type: "check_box",
-				name: "Other",
-				item_id: "ltnn"
-			}]
-			
-		},
-		{
-			type: "ok_cancel"
-		}]
-	}
-}
 
-function checkCropSize(){
+
+function checkCropSize(dialog){
 	/*
 	ถ้าเงือนไขนี้เป็นจริงเท่ากับว่าเป็น A4
 	(((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850)))
@@ -493,19 +422,54 @@ function checkCropSize(){
 	ถ้าเงือนไขนี้เป็นจริงเท่ากับว่าเป็น A3
 	(((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200)))
 	*/
-	var listStatus = [];
-	for (i=0;i<this.numPages;i++){
-		Rect = this.getPageBox("Crop", parseInt(i));
+	var results = dialog.store();
+	var listA3 = [];
+	var listA4 = [];
+	var listNone = [];
+	var strTotals = "";
+	var seSize = "";
+	for (i=0;i<this.doc.numPages;i++){
+		Rect = this.doc.getPageBox("Crop", parseInt(i));
 		if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
-			listStatus.push("A3");
+			listA3.push(parseInt(i)+1);  //"A3";
 		}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
-			listStatus.push("A4");
+			listA4.push(parseInt(i)+1);  //"A4";
 		}else{
-			listStatus.push("none");
+			listNone.push(parseInt(i)+1);   //"none";
 		}
-		
 	}
-	app.alert(listStatus.join(","));
+	if (results["lta4"]){
+		if(listA4!=""){
+			if(strTotals.length != 0){
+				strTotals += ","
+			}
+			strTotals += listA4.join(",");
+			seSize += "A4 ";
+		}
+	}
+	if (results["lta3"]){
+		if(listA3!=""){
+			if(strTotals.length != 0){
+				strTotals += ","
+			}
+			strTotals += listA3.join(",");
+			seSize += "A3 "
+		}
+	}
+	if (results["ltnn"]){
+		if(listNone!=""){
+			if(strTotals.length != 0){
+				strTotals += ","
+			}
+			strTotals += listNone.join(",");
+			seSize += "Other "
+		}
+	}
+	//listTotals = listTotals.join(",");
+	var listTotals = strTotals.split(",").map(Number);
+	listTotals = listTotals.sort(function(a, b){return a-b});
+	strTotals = listTotals.join(",");
+	return strTotals;
 }
 
 function getPageOf_A3(){
@@ -685,9 +649,158 @@ function blankPage(){
 }
 
 /* 
-	dialog สำหรับหน้ารวมtools
+	**** Dialog zone ****
 */
-var totalTools = { 
+
+var dialogGetSize = { // dialog แยกขนาดกระดาษ
+	commit_backup: function(dialog){ // blackup สำหรับ function ปุ่ม ok
+		var results = dialog.store();
+		var listA3 = [];
+		var listA4 = [];
+		var listNone = [];
+		var strTotals = "";
+		var seSize = "";
+		for (i=0;i<this.doc.numPages;i++){
+			Rect = this.doc.getPageBox("Crop", parseInt(i));
+			if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
+				listA3.push(parseInt(i)+1);  //"A3";
+			}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
+				listA4.push(parseInt(i)+1);  //"A4";
+			}else{
+				listNone.push(parseInt(i)+1);   //"none";
+			}
+		}
+		if (results["lta4"]){
+			if(listA4!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += listA4.join(",");
+				seSize += "A4 ";
+			}
+		}
+		if (results["lta3"]){
+			if(listA3!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += listA3.join(",");
+				seSize += "A3 "
+			}
+		}
+		if (results["ltnn"]){
+			if(listNone!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += listNone.join(",");
+				seSize += "Other "
+			}
+		}
+		//listTotals = listTotals.join(",");
+		var listTotals = strTotals.split(",").map(Number);
+		listTotals = listTotals.sort(function(a, b){return a-b});
+		strTotals = listTotals.join(",");
+		app.response({cTitle: "result",cQuestion: "pages size of: "+seSize, cDefault: strTotals});
+	},
+	"getl": function(dialog){
+		var results = dialog.store();
+		var listA3 = [];
+		var listA4 = [];
+		var listNone = [];
+		var strTotals = "";
+		var seSize = "";
+		for (i=0;i<this.doc.numPages;i++){
+			Rect = this.doc.getPageBox("Crop", parseInt(i));
+			if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
+				listA3.push(parseInt(i)+1);  //"A3";
+			}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
+				listA4.push(parseInt(i)+1);  //"A4";
+			}else{
+				listNone.push(parseInt(i)+1);   //"none";
+			}
+		}
+		if (results["lta4"]){
+			if(listA4!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += listA4.join(",");
+				seSize += "A4 ";
+			}
+		}
+		if (results["lta3"]){
+			if(listA3!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += listA3.join(",");
+				seSize += "A3 "
+			}
+		}
+		if (results["ltnn"]){
+			if(listNone!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += listNone.join(",");
+				seSize += "Other "
+			}
+		}
+		//listTotals = listTotals.join(",");
+		var listTotals = strTotals.split(",").map(Number);
+		listTotals = listTotals.sort(function(a, b){return a-b});
+		strTotals = listTotals.join(",");
+		dialog.load({"page": strTotals});
+	},
+	description: 
+	{
+		name: "get size page",
+		elements: [
+		{
+			type: "cluster",
+			elements: [
+			{
+				type: "check_box",
+				name: "A4",
+				item_id: "lta4"
+			},
+			{
+				type: "check_box",
+				name: "A3",
+				item_id: "lta3"
+			},
+			{
+				type: "check_box",
+				name: "Other",
+				item_id: "ltnn"
+			}]
+			
+		},
+		{
+			type: "view",
+			elements: [
+			{
+				type: "edit_text",
+				item_id: "page",
+				width: 300,
+				height: 20,
+				alignment: "align_fill"
+			},
+			{
+				type: "button",
+				name: "get list",
+				item_id: "getl"
+			}]
+		},
+		{
+			type: "ok",
+			ok_name: "close"
+		}]
+	}
+}
+
+var totalTools = {  // dialog สำหรับหน้ารวมtools
 	"slbm": function(){  // เลือกหน้าบุ๊คมารค์
 		select_bookmark("", thisDoc);
 	},
