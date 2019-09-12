@@ -361,6 +361,11 @@ function loop_ToColor(){
 	}
 }
 
+function test(){
+	var oldDoc = app.openDoc(this.path);
+	var nDoc = app.newDoc()
+	nDoc.replacePages(0, oldDoc.path, 0, oldDoc.numPages)
+}
 
 function extract_page(){
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: ""});
@@ -634,6 +639,11 @@ function getListPage(){
 	return listPageStr;
 }
 
+function getSpineBook(){
+	var oDoc = app.activeDocs;
+	
+}
+
 function blankPage(){
 	askPage = app.response("ใส่ตัวเลขหน้า ที่ต้องการแทรกหน้าว่างไว้ด้านหลัง", "insert blank page", getListPage());
 	var pagelist = askPage.split(",");
@@ -658,7 +668,27 @@ function blankPage(){
 /* 
 	**** Dialog zone ****
 */
-
+var dialogSpineBook = {
+	description: [{
+		name: "spineBook",
+		elements: [{
+			type: "view",
+			elements: [{
+				type: "edit_text",
+				width: 100,
+				height: 20
+			},
+			{
+				type: "button",
+				name: "get"
+			}]
+		},
+		{
+			type: "ok",
+			ok_name: "close"
+		}]
+	}]
+}
 
 var dialogGetSize = { // dialog แยกขนาดกระดาษ
 	commit_backup: function(dialog){ // blackup สำหรับ function ปุ่ม ok
