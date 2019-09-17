@@ -58,9 +58,9 @@ function dialogColor(){
 	app.execDialog(dialog1);
 }
 
-function countListNum(arr){
+function countListNum(arr){  //array to format number list
 	//var arr = [1,2,3,4,8,15,16,17,20,21,30];
-	//arr = arr.sort(function(a, b){return a - b});
+	arr = arr.sort(function(a, b){return a - b});
 	var start = arr[0];
 	var end = arr[0];
 	var result = "";
@@ -107,7 +107,7 @@ function clearBookmark(){
 	this.bookmarkRoot.remove();
 }
 
-function removePage(func){
+function removePage(func){ //for remove page
 	if(func == "rmBookmark"){
 		var allBookmark=this.bookmarkRoot.children.length;
 		//allBookmark = allBookmark-1;
@@ -152,7 +152,7 @@ function removePage(func){
 	}
 }
 
-function loop_ToBlack(){
+function loop_ToBlack(){ //convert pages to gray 
 	listCur = countListNum(listCurPage);
 	listPageStr = listCur.join(",");
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
@@ -201,7 +201,7 @@ function loop_ToBlack(){
 	}
 }
 
-function loop_ToColor_backup(){
+function loop_ToColor_backup(){ 
 	/*var ask_conAll = app.alert("คุณต้องการแปลงทุกหน้าเป็นขาวดำก่อนใช้หรือไม ?", 2, 2, "แปลงทุกหน้า");
 	if(ask_conAll === 4){
 		var toBlack = this.getColorConvertAction();	
@@ -263,7 +263,7 @@ function loop_ToColor_backup(){
 	}
 }
 
-function select_bookmark(msg){
+function select_bookmark(msg){ //add list to bookmark
 	if (msg === undefined){
 		msg = "";
 	}
@@ -361,7 +361,7 @@ function loop_ToColor(){
 	}
 }
 
-function test(){
+function test(){ // for test
 	var oldDoc = app.openDoc(this.path);
 	var nDoc = app.newDoc()
 	nDoc.replacePages(0, oldDoc.path, 0, oldDoc.numPages)
@@ -663,6 +663,18 @@ function blankPage(){
 		}
 		app.alert("succes", 2, 2);
 	}
+}
+
+function bookmarkToList(){
+	var allBookmark=this.bookmarkRoot.children.length;
+	//allBookmark = allBookmark-1;
+	var listPageSe = []
+	for (i=0;i<allBookmark;i++){
+		var page = this.bookmarkRoot.children[i].name;
+		page = parseInt(page);
+		listPageSe.push(page);
+	}
+	return countListNum(listPageSe);
 }
 
 /* 
@@ -1008,3 +1020,4 @@ app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: 
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
 app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
 app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
+app.addMenuItem({ cName: "getPageSize", cParent: "Document", cExec: "getPageSize()",cEnable: 1});
