@@ -58,6 +58,10 @@ function dialogColor(){
 	app.execDialog(dialog1);
 }
 
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
+
 function countListNum(arr){  //array to format number list
 	//var arr = [1,2,3,4,8,15,16,17,20,21,30];
 	arr = arr.sort(function(a, b){return a - b});
@@ -488,7 +492,7 @@ function getPageOf_A3(){
 	checkCropSize();
 }
 
-function getPageSize(){
+function getPagesList(){
 	/*thisDoc = app.openDoc({
 		cPath: this.path,
 		bHidden: true
@@ -674,7 +678,7 @@ function bookmarkToList(){
 		page = parseInt(page);
 		listPageSe.push(page);
 	}
-	return countListNum(listPageSe);
+	return listPageSe;
 }
 
 /* 
@@ -750,6 +754,7 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 		//listTotals = listTotals.join(",");
 		var listTotals = strTotals.split(",").map(Number);
 		listTotals = listTotals.sort(function(a, b){return a-b});
+		// listTotals = listTotals.filter(onlyUnique); //list ไม่ซ้ำกัน
 		strTotals = listTotals.join(",");
 		app.response({cTitle: "result",cQuestion: "pages size of: "+seSize, cDefault: strTotals});
 	},
@@ -797,6 +802,15 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 				seSize += "Other "
 			}
 		}
+		if (results["bmls"]){
+			if(this.doc.bookmarkToList()!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += this.doc.bookmarkToList();
+				seSize += "boomark "
+			}
+		}
 		//listTotals = listTotals.join(",");
 		var listTotals = strTotals.split(",").map(Number);
 		listTotals = listTotals.sort(function(a, b){return a-b});
@@ -805,9 +819,10 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 	},
 	description: 
 	{
-		name: "get size page",
+		name: "get list",
 		elements: [
 		{
+			name: "get size page",
 			type: "cluster",
 			elements: [
 			{
@@ -824,6 +839,17 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 				type: "check_box",
 				name: "Other",
 				item_id: "ltnn"
+			}]
+			
+		},
+		{
+			name: "bookmark",
+			type: "cluster",
+			elements: [
+			{
+				type: "check_box",
+				name: "bookmark pages",
+				item_id: "bmls"
 			}]
 			
 		},
@@ -970,16 +996,16 @@ app.addToolButton({
 	cTooltext: "ClearAllPage"
 	});
 app.addToolButton({
-	cName: "pages size",
+	cName: "getPagesList",
 	//oIcon: oIcon,
-	cExec: "getPageSize()",
-	cTooltext: "pages size",
+	cExec: "getPagesList()",
+	cTooltext: "getPagesList",
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "pages size"
 	});
 	
-app.addToolButton({
+/*app.addToolButton({
 	cName: "stampFileName",
 	//oIcon: oIcon,
 	cExec: "addText({_text: this.documentFileName, pageStart: 0,pageEnd: 0, size: 5, rotation: -90})",
@@ -987,8 +1013,8 @@ app.addToolButton({
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "stampFileName"
-	});	
-app.addToolButton({
+	});	 */
+/*app.addToolButton({
 	cName: "stampFileName(Cover)",
 	//oIcon: oIcon,
 	cExec: "addTextCorver({_text:this.documentFileName, size: 5, bet: 6})",
@@ -996,7 +1022,7 @@ app.addToolButton({
 	cEnable: true,
 	//nPos: -1,
 	cTooltext: "stampFileName(Cover)"
-	});
+	}); */
 app.addToolButton({
 	cName: "bookmark page",
 	//oIcon: oIcon,
@@ -1020,4 +1046,4 @@ app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: 
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
 app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
 app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
-app.addMenuItem({ cName: "getPageSize", cParent: "Document", cExec: "getPageSize()",cEnable: 1});
+app.addMenuItem({ cName: "getPagesList", cParent: "Document", cExec: "getPagesList()",cEnable: 1});
