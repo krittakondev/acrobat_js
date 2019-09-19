@@ -1,12 +1,7 @@
 var listCurPage = [];
 
-function strPagesFormat(strPage){ // ยังไม่ได้ใช้อะไร
-	var listPages = [];
-	listPages = strPage.split(",");
-	listPages = listPages.map(Number);
-	listPages = listPages.sort(function(a, b){return a - b});
-}
 
+// this.getPageBox("Crop", เลขหน้า)  index ที่  2 กับ 3  คือขนาดไซต์ ถ้าอยากได้ขนาดไซต์ที่เป็น cm ก็ให้หารด้วย 28.355 จะได้ที่เป็นไซต์ใกล้เคียง
 function backup(numPage){
 	// Get a color convert action
 	
@@ -62,8 +57,9 @@ function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function countListNum(arr){  //array to format number list
-	//var arr = [1,2,3,4,8,15,16,17,20,21,30];
+function listToFormat(arr){  //array to format number list
+	//var arr = [1,2,3,4,8,15,16,17,20,21,30]
+	//arr = arr.map(Number);
 	arr = arr.sort(function(a, b){return a - b});
 	var start = arr[0];
 	var end = arr[0];
@@ -85,6 +81,22 @@ function countListNum(arr){  //array to format number list
 	result = result.slice(0, result.length-1)
 	result = result.split(",")
 	return result
+}
+
+function formatToList(strList){
+	var arrPages = []
+	splitList = strList.split(",");
+	for(i=0;i<splitList.length;i++){
+		if(splitList[i].indexOf("-") != -1){
+			subSplit = splitList[i].split("-");
+			for(j=subSplit[0];j<=subSplit[1];j++){
+				arrPages.push(j);
+			}
+		}else{
+			arrPages.push(splitList[i]);
+		}
+	}
+	return arrPages;
 }
 
 function bookmarkToBlank(){
@@ -121,8 +133,9 @@ function removePage(func){ //for remove page
 			page = parseInt(page);
 			listPageSe.push(page);
 		}
+		//listPageSe = listPageSe.map(Number);
 		listPageSe = listPageSe.sort();
-		var check = app.alert("จะลบทุกหน้า "+listPageSe+" จริงหรือไม่?", 2, 2, "ยืนยัน");
+		var check = app.alert("จะลบทุกหน้า "+listPageSe+" จริงหรือไม่?", 2, 2, "confirm");
 		if (check === 4){
 			for (i=this.numPages;i>0;i--){
 				if(listPageSe.indexOf(i) != -1){
@@ -141,8 +154,9 @@ function removePage(func){ //for remove page
 			page = parseInt(page);
 			listPageSe.push(page);
 		}
+		//listPageSe = listPageSe.map(Number);
 		listPageSe = listPageSe.sort();
-		var check = app.alert("จะลบทุกหน้ายกเว้นหน้า "+listPageSe+" จริงหรือไม่?", 2, 2, "ยืนยัน");
+		var check = app.alert("จะลบทุกหน้ายกเว้นหน้า "+listPageSe+" จริงหรือไม่?", 2, 2, "confirm");
 		if (check === 4){
 			for (i=this.numPages;i>0;i--){
 				if(listPageSe.indexOf(i) == -1){
@@ -157,7 +171,7 @@ function removePage(func){ //for remove page
 }
 
 function loop_ToBlack(){ //convert pages to gray 
-	listCur = countListNum(listCurPage);
+	listCur = listToFormat(listCurPage);
 	listPageStr = listCur.join(",");
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
 	if (pages === null){
@@ -310,7 +324,7 @@ function insertBlankCur(){
 }
 
 function loop_ToColor(){
-	listCur = countListNum(listCurPage);
+	listCur = listToFormat(listCurPage);
 	listPageStr = listCur.join(",");
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
 	pages.cDefault = "testing";
@@ -366,9 +380,11 @@ function loop_ToColor(){
 }
 
 function test(){ // for test
-	var oldDoc = app.openDoc(this.path);
+	/*var oldDoc = app.openDoc(this.path);
 	var nDoc = app.newDoc()
 	nDoc.replacePages(0, oldDoc.path, 0, oldDoc.numPages)
+	*/
+	matchA3()
 }
 
 function extract_page(){
@@ -492,7 +508,7 @@ function getPageOf_A3(){
 	checkCropSize();
 }
 
-function getPagesList(){
+function filterPages(){
 	/*thisDoc = app.openDoc({
 		cPath: this.path,
 		bHidden: true
@@ -500,8 +516,8 @@ function getPagesList(){
 	//app.execDialog(totalTools);
 	//this.bookmarkToBlank();
 	//dotheDialog(dialogGetSize, this);
-	dialogGetSize.doc = this;
-	app.execDialog(dialogGetSize);
+	dialogFilterPages.doc = this;
+	app.execDialog(dialogFilterPages);
 }
 function Undo(){
 	listCurPage.pop()
@@ -638,7 +654,7 @@ function getResult(func){
 }
 
 function getListPage(){
-	listCur = countListNum(listCurPage);
+	listCur = listToFormat(listCurPage);
 	listPageStr = listCur.join(",");
 	return listPageStr;
 }
@@ -681,6 +697,12 @@ function bookmarkToList(){
 	return listPageSe;
 }
 
+function matchA3(){ // ยังไม่เสร็จ
+	pages = app.response({cTitle: "pages",cQuestion: "Enter your pages", cDefault: ""});
+	pages = pages.split(",")
+	app.alert(pages);
+}
+
 /* 
 	**** Dialog zone ****
 */
@@ -706,8 +728,8 @@ var dialogSpineBook = {
 	}]
 }
 
-var dialogGetSize = { // dialog แยกขนาดกระดาษ
-	commit_backup: function(dialog){ // blackup สำหรับ function ปุ่ม ok
+var dialogFilterPages = { // dialog แยกขนาดกระดาษ
+	commit_backup: function(dialog){ // backup สำหรับ function ปุ่ม ok
 		var results = dialog.store();
 		var listA3 = [];
 		var listA4 = [];
@@ -715,7 +737,7 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 		var strTotals = "";
 		var seSize = "";
 		for (i=0;i<this.doc.numPages;i++){
-			Rect = this.doc.getPageBox("Crop", parseInt(i));
+			Rect = this.doc.getPageBox("Crop", parseInt(i)); 
 			if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
 				listA3.push(parseInt(i)+1);  //"A3";
 			}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
@@ -815,7 +837,7 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 		var listTotals = strTotals.split(",").map(Number);
 		listTotals = listTotals.sort(function(a, b){return a-b});
 		strTotals = listTotals.join(",");
-		dialog.load({"page": countListNum(listTotals).join(",")});
+		dialog.load({"page": listToFormat(listTotals).join(",")});
 	},
 	description: 
 	{
@@ -875,6 +897,7 @@ var dialogGetSize = { // dialog แยกขนาดกระดาษ
 		}]
 	}
 }
+
 
 var totalTools = {  // dialog สำหรับหน้ารวมtools
 	"slbm": function(){  // เลือกหน้าบุ๊คมารค์
@@ -996,13 +1019,13 @@ app.addToolButton({
 	cTooltext: "ClearAllPage"
 	});
 app.addToolButton({
-	cName: "getPagesList",
+	cName: "filterPages",
 	//oIcon: oIcon,
-	cExec: "getPagesList()",
-	cTooltext: "getPagesList",
+	cExec: "filterPages()",
+	cTooltext: "filterPages",
 	cEnable: true,
 	//nPos: -1,
-	cTooltext: "pages size"
+	cTooltext: "filterPages"
 	});
 	
 /*app.addToolButton({
@@ -1044,6 +1067,7 @@ app.addToolButton({
 
 app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: "removePage('rmBookmarkNotSelect')",cEnable: 1});
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
+app.addMenuItem({ cName: "test", cParent: "Tools", cExec: "test()",cEnable: 1});
 app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
-app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
-app.addMenuItem({ cName: "getPagesList", cParent: "Document", cExec: "getPagesList()",cEnable: 1});
+//app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
+app.addMenuItem({ cName: "filterPages", cParent: "Document", cExec: "filterPages()",cEnable: 1});
