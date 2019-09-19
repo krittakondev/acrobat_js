@@ -57,7 +57,10 @@ function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function listToFormat(arr){  //array to format number list
+/*
+	zone format list pages  
+*/
+function formatToList(arr){  //array to format number list
 	//var arr = [1,2,3,4,8,15,16,17,20,21,30]
 	//arr = arr.map(Number);
 	arr = arr.sort(function(a, b){return a - b});
@@ -82,8 +85,7 @@ function listToFormat(arr){  //array to format number list
 	result = result.split(",")
 	return result
 }
-
-function formatToList(strList){
+function formatStrToList(strList){
 	var arrPages = []
 	splitList = strList.split(",");
 	for(i=0;i<splitList.length;i++){
@@ -96,8 +98,9 @@ function formatToList(strList){
 			arrPages.push(splitList[i]);
 		}
 	}
-	return arrPages;
+	return arrPage.map(Number).sort(function(a, b){return a - b});
 }
+
 
 function bookmarkToBlank(){
 	Rect = this.getPageBox()
@@ -171,7 +174,7 @@ function removePage(func){ //for remove page
 }
 
 function loop_ToBlack(){ //convert pages to gray 
-	listCur = listToFormat(listCurPage);
+	listCur = formatToList(listCurPage);
 	listPageStr = listCur.join(",");
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
 	if (pages === null){
@@ -324,7 +327,7 @@ function insertBlankCur(){
 }
 
 function loop_ToColor(){
-	listCur = listToFormat(listCurPage);
+	listCur = formatToList(listCurPage);
 	listPageStr = listCur.join(",");
 	var pages = app.response({cTitle: "เลขหน้า",cQuestion: "ใส่หน้าที่ต้องการ(ใส่ตัว , เพื่อตัวแยกในแต่ละหน้าหรือตัว - เพื่อระบุช่วงตัวเลข)", cDefault: listPageStr});
 	pages.cDefault = "testing";
@@ -654,7 +657,7 @@ function getResult(func){
 }
 
 function getListPage(){
-	listCur = listToFormat(listCurPage);
+	listCur = formatToList(listCurPage);
 	listPageStr = listCur.join(",");
 	return listPageStr;
 }
@@ -697,10 +700,35 @@ function bookmarkToList(){
 	return listPageSe;
 }
 
-function matchA3(){ // ยังไม่เสร็จ
+function matchA3(){
 	pages = app.response({cTitle: "pages",cQuestion: "Enter your pages", cDefault: ""});
-	pages = pages.split(",")
-	app.alert(pages);
+	sPages = pages.split(",")
+	for(i=sPages.length-1;i>=0;i--){
+		if(sPages[i].indexOf("-") != -1){
+			subSplit = sPages[i].split("-").map(Number);
+			if(subSplit[0]%2 === 0 && subSplit[1]%2 === 1){
+				this.newPage(subSplit[1]+1);
+				this.deletePages(subSplit[0]-1,subSplit[1]-1);
+				this.newPage(subSplit[0]-1);
+			}else if(subSplit[0]%2 === 1 && subSplit[1]%2 === 0){
+				this.deletePages(subSplit[0]-1, subSplit[1]-1);
+			}else if(((subSplit[1]-subSplit[0])+1)%2 === 1){
+				if(subSplit[1]%2 === 0){
+					this.newPage(subSplit[1]);
+				}else if(subSplit[1]%2 === 1){
+					this.newPage(subSplit[1]+1);
+				}
+				this.deletePages(subSplit[0]-1, subSplit[1]-1);
+			}
+		}else{
+			if(parseInt(sPages[i])%2 === 0){
+				this.newPage(parseInt(sPages[i]));
+			}else if(subSplit[1]%2 === 1){
+				this.newPage(parseInt(sPages[i])+1);
+			}
+			this.deletePages(parseInt(sPages[i])-1);
+		}
+	}
 }
 
 /* 
@@ -837,7 +865,7 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 		var listTotals = strTotals.split(",").map(Number);
 		listTotals = listTotals.sort(function(a, b){return a-b});
 		strTotals = listTotals.join(",");
-		dialog.load({"page": listToFormat(listTotals).join(",")});
+		dialog.load({"page": formatToList(listTotals).join(",")});
 	},
 	description: 
 	{
@@ -1071,3 +1099,4 @@ app.addMenuItem({ cName: "test", cParent: "Tools", cExec: "test()",cEnable: 1});
 app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
 //app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
 app.addMenuItem({ cName: "filterPages", cParent: "Document", cExec: "filterPages()",cEnable: 1});
+app.addMenuItem({ cName: "matchA3", cParent: "Document", cExec: "matchA3()",cEnable: 1});
