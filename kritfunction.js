@@ -733,7 +733,6 @@ function matchA3(){
 		}else{
 			if(parseInt(sPages[i])%2 === 0){
 				this.newPage(parseInt(sPages[i]));
-				
 			}else if(sPages[i]%2 === 1){
 				this.newPage(parseInt(sPages[i])+1);
 			}
@@ -938,12 +937,11 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 	}
 }
 
-/*var dialogRotate = {
+/*
+var dialogRotate = {
 	initialize: function(dialog){
-		dialog.enable({
-			"": false,
-			"
-		})
+		dialog.load({"auto": true})
+		dialog.load({"scrc": "Auto Mode"})
 	},
 	commit: function(dialog){
 		app.alert(dialog.store()["auto"])
@@ -982,7 +980,9 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 		}]
 	}
 }
+
 */
+
 var dialogSpineBook = { // กำลังเขียนอยู่
 	description: {
 		name: "spineBook",
