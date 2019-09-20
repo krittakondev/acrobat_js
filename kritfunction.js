@@ -733,12 +733,14 @@ function matchA3(){
 		}else{
 			if(parseInt(sPages[i])%2 === 0){
 				this.newPage(parseInt(sPages[i]));
-			}else if(subSplit[1]%2 === 1){
+				
+			}else if(sPages[i]%2 === 1){
 				this.newPage(parseInt(sPages[i])+1);
 			}
 			this.deletePages(parseInt(sPages[i])-1);
 		}
 	}
+	app.alert("success");
 }
 
 /* 
@@ -936,7 +938,52 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 	}
 }
 
-var dialogSpineBook = {
+/*var dialogRotate = {
+	initialize: function(dialog){
+		dialog.enable({
+			"": false,
+			"
+		})
+	},
+	commit: function(dialog){
+		app.alert(dialog.store()["auto"])
+	},
+	"auto": function(dialog){
+		dialog.load({"scrc": "Auto Mode"})
+	},
+	"ctmm": function(dialog){
+		dialog.load({"scrc": "Custom Mode"})
+	},
+	description: {
+		name: "Easy Rotate",
+		elements: [{
+			type: "cluster",
+			name: "Mode",
+			elements: [{
+				type: "radio",
+				name: "auto",
+				item_id: "auto",
+				group_id: "mode"
+			},
+			{
+				type: "radio",
+				name: "customs",
+				item_id: "ctmm", // ย่อมาจาก custom mode
+				group_id: "mode"
+			}]
+		},
+		{
+			type: "cluster",
+			//name: "Auto Mode",
+			item_id: "scrc" // ย่อมาจาก screen custom
+		},
+		{
+			type: "ok_cancel"
+		}]
+	}
+}
+*/
+var dialogSpineBook = { // กำลังเขียนอยู่
 	description: {
 		name: "spineBook",
 		elements: [{
@@ -951,7 +998,7 @@ var dialogSpineBook = {
 	}
 }
 
-var totalTools = {  // dialog สำหรับหน้ารวมtools
+var totalTools = {  // dialog สำหรับหน้ารวมtools // ยังไม่สมบูรณ์
 	"slbm": function(){  // เลือกหน้าบุ๊คมารค์
 		select_bookmark("", thisDoc);
 	},
