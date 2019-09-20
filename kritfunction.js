@@ -1,7 +1,17 @@
 var listCurPage = [];
 
 
-// this.getPageBox("Crop", เลขหน้า)  index ที่  2 กับ 3  คือขนาดไซต์ ถ้าอยากได้ขนาดไซต์ที่เป็น cm ก็ให้หารด้วย 28.355 จะได้ที่เป็นไซต์ใกล้เคียง
+// this.getPageBox("Crop", เลขหน้า)  index ที่  2 กับ 3  คือขนาดไซต์ ถ้าอยากได้ขนาดไซต์ที่เป็น inch ก็หารด้วย 72  ก็จะได้ inch 1 inch = 2.54 cm
+function toCm(rect){
+	result = (rect/72)*2.54;
+	return result;
+}
+function PointsToCm(rect){
+	return rect*0.0352778;
+}
+function cmToPoints(cm){
+	return cm/0.0352778;
+}
 function backup(numPage){
 	// Get a color convert action
 	
@@ -926,6 +936,20 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 	}
 }
 
+var dialogSpineBook = {
+	description: {
+		name: "spineBook",
+		elements: [{
+			type: "list_box",
+			name: "testing",
+			width: 300
+		
+		},
+		{
+			type: "ok",
+		}]
+	}
+}
 
 var totalTools = {  // dialog สำหรับหน้ารวมtools
 	"slbm": function(){  // เลือกหน้าบุ๊คมารค์
