@@ -63,6 +63,7 @@ function dialogColor(){
 	app.execDialog(dialog1);
 }
 
+
 function onlyUnique(value, index, self) { 
     return self.indexOf(value) === index;
 }
@@ -677,6 +678,31 @@ function getSpineBook(){
 	
 }
 
+function updateRotation(rotIn, page){
+	var rotOld = this.getPageRotation(page);
+	if ((rotOld+rotIn) > 270){
+		this.setPageRotations(page, page, (rotOld+rotIn)-360)
+	}else if((rotOld+rotIn) < 0){
+		this.setPageRotations(page, page, (rotOld+rotIn)+360)
+	}else{
+		this.setPageRotations(page, page, rotOld+rotIn)
+	}
+	//this.setPageRotations(page, page, rotOld+rotIn)
+}
+
+function sizeAutoRotate(){
+	for (i=0;i<this.numPages;i++){
+		Rect = this.getPageBox("Crop", parseInt(i));
+		if (((PointsToCm(Rect[1]) > 41.5 && PointsToCm(Rect[1]) < 42.5) && (PointsToCm(Rect[2]) > 29.2 && PointsToCm(Rect[2]) < 30.2))){ // ถ้าเป็น A3 แนวตั้ง
+			this.updateRotation(-90, parseInt(i)); // ก็ให้rotate หันหัวไปซ้าย
+		}else if(((PointsToCm(Rect[1]) > 20.5 && PointsToCm(Rect[1]) < 21.5) && (PointsToCm(Rect[2]) > 29.2 && PointsToCm(Rect[2]) < 30.2))){ // ถ้าเป็นA4 แนวนอน
+			this.updateRotation(-90, parseInt(i)); // ก็ให้rotate หันหัวไปซ้าย
+		}
+	}
+	return true;
+}
+
+
 function blankPage(){
 	askPage = app.response("ใส่ตัวเลขหน้า ที่ต้องการแทรกหน้าว่างไว้ด้านหลัง", "insert blank page", getListPage());
 	var pagelist = askPage.split(",");
@@ -740,6 +766,11 @@ function matchA3(){
 		}
 	}
 	app.alert("success");
+}
+
+function callDialogRotation(){
+	dialogRotate.doc = this;
+	app.execDialog(dialogRotate);
 }
 
 /* 
@@ -828,7 +859,7 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 		var seSize = "";
 		for (i=0;i<this.doc.numPages;i++){
 			Rect = this.doc.getPageBox("Crop", parseInt(i));
-			if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 1180 && Rect[2] < 1200))){
+			if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 1180 && Rect[2] < 1200)) || ((Rect[1] > 1180 && Rect[1] < 1200) && (Rect[2] > 820 && Rect[2] < 850))){
 				listA3.push(parseInt(i)+1);  //"A3";
 			}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
 				listA4.push(parseInt(i)+1);  //"A4";
@@ -937,20 +968,22 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 	}
 }
 
-/*
+
 var dialogRotate = {
 	initialize: function(dialog){
-		dialog.load({"auto": true})
-		dialog.load({"scrc": "Auto Mode"})
+		dialog.enable({"scrc": false});
+		dialog.load({"auto": true});
 	},
 	commit: function(dialog){
-		app.alert(dialog.store()["auto"])
+		if(dialog.store()["auto"] === true){
+			this.doc.sizeAutoRotate();
+		}
 	},
 	"auto": function(dialog){
-		dialog.load({"scrc": "Auto Mode"})
+		dialog.enable({"scrc": false})
 	},
 	"ctmm": function(dialog){
-		dialog.load({"scrc": "Custom Mode"})
+		dialog.enable({"scrc": true})
 	},
 	description: {
 		name: "Easy Rotate",
@@ -968,12 +1001,20 @@ var dialogRotate = {
 				name: "customs",
 				item_id: "ctmm", // ย่อมาจาก custom mode
 				group_id: "mode"
+			},
+			{
+				type: "view",
+				item_id: "scrc",
+				elements: [{
+					type: "static_text",
+					name: "pages"
+				},
+				{
+					type: "edit_text",
+					width: 300,
+					item_id: "gctp" // ย่อมาจาก get customs page
+				}]
 			}]
-		},
-		{
-			type: "cluster",
-			//name: "Auto Mode",
-			item_id: "scrc" // ย่อมาจาก screen custom
 		},
 		{
 			type: "ok_cancel"
@@ -981,7 +1022,7 @@ var dialogRotate = {
 	}
 }
 
-*/
+
 
 var dialogSpineBook = { // กำลังเขียนอยู่
 	description: {
@@ -1171,3 +1212,4 @@ app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getR
 //app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
 app.addMenuItem({ cName: "filterPages", cParent: "Document", cExec: "filterPages()",cEnable: 1});
 app.addMenuItem({ cName: "matchA3", cParent: "Document", cExec: "matchA3()",cEnable: 1});
+app.addMenuItem({ cName: "eazyRotate", cParent: "Document", cExec: "callDialogRotation()",cEnable: 1});
