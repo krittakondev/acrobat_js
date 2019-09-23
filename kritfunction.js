@@ -690,6 +690,10 @@ function updateRotation(rotIn, page){
 	//this.setPageRotations(page, page, rotOld+rotIn)
 }
 
+/*function customsRotate(){
+	
+
+}*/
 function sizeAutoRotate(){
 	for (i=0;i<this.numPages;i++){
 		Rect = this.getPageBox("Crop", parseInt(i));
@@ -699,6 +703,7 @@ function sizeAutoRotate(){
 			this.updateRotation(-90, parseInt(i)); // ก็ให้rotate หันหัวไปซ้าย
 		}
 	}
+	
 	return true;
 }
 
@@ -973,6 +978,7 @@ var dialogRotate = {
 	initialize: function(dialog){
 		dialog.enable({"scrc": false});
 		dialog.load({"auto": true});
+		dialog.load({"rotl": {"clocwise 90 degrees": +1, "couterClockwise 90 degrees": -2, "180 degrees": -3}})
 	},
 	commit: function(dialog){
 		if(dialog.store()["auto"] === true){
@@ -1006,6 +1012,11 @@ var dialogRotate = {
 				type: "view",
 				item_id: "scrc",
 				elements: [{
+					type: "popup",
+					item_id: "rotl", //ย่อมาจาก Rotate list
+					width: 200
+				},
+				{
 					type: "static_text",
 					name: "pages"
 				},
@@ -1014,10 +1025,11 @@ var dialogRotate = {
 					width: 300,
 					item_id: "gctp" // ย่อมาจาก get customs page
 				}]
-			}]
-		},
-		{
-			type: "ok_cancel"
+			},
+			{
+				type: "ok_cancel"
+			}
+			]
 		}]
 	}
 }
