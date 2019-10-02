@@ -109,7 +109,7 @@ function formatStrToList(strList){
 			arrPages.push(splitList[i]);
 		}
 	}
-	return arrPage.map(Number).sort(function(a, b){return a - b});
+	return arrPages.map(Number).sort(function(a, b){return a - b});
 }
 
 
@@ -522,6 +522,18 @@ function getPageOf_A3(){
 	checkCropSize();
 }
 
+function backupWangAksorn(){ // ดึ่งartbox มาเป็นcrop box
+	for(i=0;i<this.numPages-1;i++){
+		var aRect = this.getPageBox("Art", i)
+		this.setPageBoxes("Crop", i, i, [aRect[0], aRect[1], aRect[2], aRect[3]])
+	}
+}
+
+function docCopy(){
+	var docold = this
+	var doctest = app.newDoc()
+	doctest.replacePages(0, this.path, 0,docold.numPages-1)
+}
 function filterPages(){
 	/*thisDoc = app.openDoc({
 		cPath: this.path,
@@ -674,8 +686,9 @@ function getListPage(){
 }
 
 function getSpineBook(){
-	var oDoc = app.activeDocs;
-	
+	//var oDoc = app.activeDocs;
+	result = (this.numPages/2)*0.0095;
+	return result;
 }
 
 function updateRotation(rotIn, page){
@@ -854,7 +867,9 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 		// listTotals = listTotals.filter(onlyUnique); //list ไม่ซ้ำกัน
 		strTotals = listTotals.join(",");
 		app.response({cTitle: "result",cQuestion: "pages size of: "+seSize, cDefault: strTotals});
+		dialog.load({"ctpg": formatStrToList(dialog.store()["page"]).length});
 	},
+	
 	"getl": function(dialog){
 		var results = dialog.store();
 		var listA3 = [];
@@ -912,7 +927,18 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 		var listTotals = strTotals.split(",").map(Number);
 		listTotals = listTotals.sort(function(a, b){return a-b});
 		strTotals = listTotals.join(",");
-		dialog.load({"page": formatToList(listTotals).join(",")});
+		showListPage = formatToList(listTotals).join(",")
+		if (showListPage == 0){
+			dialog.load({"page": ""});
+		}else{
+			dialog.load({"page": showListPage});
+		}
+		countPages = Number(formatStrToList(dialog.store()["page"]).length)
+		if (dialog.store()["page"] == ""){
+			dialog.load({"ctpg": "0"});
+		}else{
+			dialog.load({"ctpg": countPages.toString()});
+		}
 	},
 	description: 
 	{
@@ -964,6 +990,18 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 				type: "button",
 				name: "get list",
 				item_id: "getl"
+			},
+			{
+				type: "static_text",
+				name: "count",
+				alignment: "align_right"
+			},
+			{
+				type: "edit_text",
+				item_id: "ctpg", // ย่อมาจาก count page
+				width: 50,
+				height: 20,
+				alignment: "align_right"
 			}]
 		},
 		{
@@ -1221,7 +1259,7 @@ app.addMenuItem({ cName: "remove page not boomark", cParent: "Document", cExec: 
 app.addMenuItem({ cName: "remove page bookmark", cParent: "Document", cExec: "removePage('rmBookmark')",cEnable: 1});
 app.addMenuItem({ cName: "test", cParent: "Tools", cExec: "test()",cEnable: 1});
 app.addMenuItem({ cName: "getOneSideForPrint", cParent: "Document", cExec: "getResult("+getOneSide+")",cEnable: 1});
-//app.addMenuItem({ cName: "getListPage", cParent: "Document", cExec: "getResult("+getListPage+")",cEnable: 1});
+app.addMenuItem({ cName: "getSpineBook", cParent: "Document", cExec: "app.alert(getSpineBook()+' cm')",cEnable: 1});
 app.addMenuItem({ cName: "filterPages", cParent: "Document", cExec: "filterPages()",cEnable: 1});
 app.addMenuItem({ cName: "matchA3", cParent: "Document", cExec: "matchA3()",cEnable: 1});
 app.addMenuItem({ cName: "eazyRotate", cParent: "Document", cExec: "callDialogRotation()",cEnable: 1});
