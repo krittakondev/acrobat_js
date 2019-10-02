@@ -1,3 +1,13 @@
+/*
+
+เขียน filterPage ให้สามารถget แนวตั้งแนวนอนได้
+
+
+
+
+
+*/
+
 var listCurPage = [];
 
 
