@@ -2,7 +2,7 @@
 
 เขียน filterPage ให้สามารถget แนวตั้งแนวนอนได้
 
-
+เขียนให้ filterPage สามารถcall function อื่นได้ เช่น ลบทุกหน้ายกเว้นA3 หรือ bookmark หน้า A3 เป็นต้น
 
 
 
