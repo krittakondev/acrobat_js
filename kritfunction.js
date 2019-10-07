@@ -884,7 +884,10 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 		var results = dialog.store();
 		var listA3 = [];
 		var listA4 = [];
+		var listA5 = [];
 		var listNone = [];
+		var listLandscape = [];
+		var listPortrailt = [];
 		var strTotals = "";
 		var seSize = "";
 		for (i=0;i<this.doc.numPages;i++){
@@ -893,6 +896,8 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 				listA3.push(parseInt(i)+1);  //"A3";
 			}else if (((Rect[1] > 820 && Rect[1] < 850) && (Rect[2] > 580 && Rect[2] < 605)) || ((Rect[1] > 580 && Rect[1] < 605) && (Rect[2] > 820 && Rect[2] < 850))){
 				listA4.push(parseInt(i)+1);  //"A4";
+			}else if (((Rect[1] > cmToPoints(20.95) && Rect[1] < cmToPoints(21.05) && (Rect[2] > cmToPoints(14.80) && Rect[2] < cmToPoints(14.90))) || ((Rect[1] > cmToPoints(14.80) && Rect[1] < cmToPoints(14.90)) && (Rect[2] > cmToPoints(20.95) && Rect[2] < cmToPoints(21.05))))){
+				listA5.push(parseInt(i)+1);  //"A5";
 			}else{
 				listNone.push(parseInt(i)+1);   //"none";
 			}
@@ -933,6 +938,15 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 				seSize += "boomark "
 			}
 		}
+		if (results["lta5"]){
+			if(listA5!=""){
+				if(strTotals.length != 0){
+					strTotals += ","
+				}
+				strTotals += listA5.join(",");
+				seSize += "A5 "
+			}
+		}
 		//listTotals = listTotals.join(",");
 		var listTotals = strTotals.split(",").map(Number);
 		listTotals = listTotals.sort(function(a, b){return a-b});
@@ -952,12 +966,18 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 	},
 	description: 
 	{
-		name: "get list",
+		name: "get page list",
 		elements: [
 		{
 			name: "get size page",
 			type: "cluster",
+			align_children: "align_row",
 			elements: [
+			{
+				type: "check_box",
+				name: "A5",
+				item_id: "lta5"
+			},
 			{
 				type: "check_box",
 				name: "A4",
@@ -1154,6 +1174,18 @@ var totalTools = {  // dialog สำหรับหน้ารวมtools // �
 	}
 }
 
+var testdialog = {
+	description: {
+		name: "testing",
+		elements: [{
+			type: "popup",
+			name: "testing"
+		},
+		{
+			type: "ok_cancel",
+		}]
+	}
+}
 
 app.addToolButton({
 	cName: "add list",
