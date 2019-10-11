@@ -114,7 +114,7 @@ function formatStrToList(strList){
 	for(i=0;i<splitList.length;i++){
 		if(splitList[i].indexOf("-") != -1){
 			subSplit = splitList[i].split("-");
-			for(j=subSplit[0];j<=subSplit[1];j++){
+			for(j=parseInt(subSplit[0]);j<=parseInt(subSplit[1]);j++){
 				arrPages.push(j);
 			}
 		}else{
@@ -959,7 +959,7 @@ var dialogFilterPages = { // dialog แยกขนาดกระดาษ
 		}else{
 			dialog.load({"page": showListPage});
 		}
-		countPages = Number(formatStrToList(dialog.store()["page"]).length)
+		countPages = formatStrToList(dialog.store()["page"]).length
 		if (dialog.store()["page"] == ""){
 			dialog.load({"ctpg": "0"});
 		}else{
