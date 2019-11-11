@@ -111,7 +111,7 @@ function formatToList(arr){  //array to format number list
 	return result
 }
 function formatStrToList(strList){
-	var arrPages = []
+	var arrPages = [];
 	splitList = strList.split(",");
 	for(i=0;i<splitList.length;i++){
 		if(splitList[i].indexOf("-") != -1){
@@ -407,12 +407,35 @@ function loop_ToColor(){
 	}
 }
 
+function get2side(){
+	pages = app.response("pages list", "Enter your pages");
+	listPages = formatStrToList(pages);
+	mylist = []
+	// app.alert(listPages.length);
+	for(i=0;i<listPages.length;i++){
+		if(listPages[i] % 2 == 0){ // ถ้าเป็นหน้าคู่
+			add = listPages[i]-1;
+			if(listPages.indexOf(add) == -1){
+				listPages.push(add);
+			}
+		}else{
+			add = listPages[i]+1;
+			if(listPages.indexOf(add) == -1){
+				listPages.push(add);
+			}
+		}
+	}
+	app.response({cTitle: "Result", cDefault: formatToList(listPages)})
+	//app.alert(mylist)
+
+}
+
 function test(){ // for test
 	/*var oldDoc = app.openDoc(this.path);
 	var nDoc = app.newDoc()
 	nDoc.replacePages(0, oldDoc.path, 0, oldDoc.numPages)
 	*/
-	matchA3()
+	get2side()
 }
 
 function extract_page(){
@@ -1309,3 +1332,4 @@ app.addMenuItem({ cName: "getSpineBook", cParent: "Document", cExec: "app.alert(
 app.addMenuItem({ cName: "filterPages", cParent: "Document", cExec: "filterPages()",cEnable: 1});
 app.addMenuItem({ cName: "matchA3", cParent: "Document", cExec: "matchA3()",cEnable: 1});
 app.addMenuItem({ cName: "eazyRotate", cParent: "Document", cExec: "callDialogRotation()",cEnable: 1});
+app.addMenuItem({ cName: "get2side", cParent: "Tools", cExec: "get2side()",cEnable: 1});
