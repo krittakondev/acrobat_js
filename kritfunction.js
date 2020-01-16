@@ -867,6 +867,16 @@ var dialogSpineBook = {
 }
 
 var dialogFilterPages = { // dialog แยกขนาดกระดาษ
+
+
+	"page": function(dialog){
+		countPages = formatStrToList(dialog.store()["page"]).length
+		if (dialog.store()["page"] == ""){
+			dialog.load({"ctpg": "0"});
+		}else{
+			dialog.load({"ctpg": countPages.toString()});
+		}
+	},
 	commit_backup: function(dialog){ // backup สำหรับ function ปุ่ม ok
 		var results = dialog.store();
 		var listA3 = [];
