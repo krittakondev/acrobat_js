@@ -317,7 +317,7 @@ function autoCrop(){
 		if(i % 2 == 0){ //ถ้าเป็นหน้า คี่ ให้ตัดซ้าย
 			this.setPageBoxes("Crop", i, i, [cropBox[0]+artBox[0], cropBox[1], cropBox[2], cropBox[3]])
 		}else if( i % 2 == 1){ // ถ้าหน้าคู่ให้ตัดขวา
-			this.setPageBoxes("Crop", i, i, [cropBox[0], cropBox[1], cropBox[2]-artBox[0], cropBox[3]]) // ยังไม่ชัวต้องลองเทส
+			this.setPageBoxes("Crop", i, i, [cropBox[0], cropBox[1], cropBox[2]-(cropBox[2]-artBox[2]), cropBox[3]]) // ยังไม่ชัวต้องลองเทส
 		}
 	}
 }
